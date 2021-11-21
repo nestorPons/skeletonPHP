@@ -1,0 +1,29 @@
+@font-color: #333;
+@disabled-color: #999;
+
+:root {
+  /* --spinner-fore-color: inherit; */
+  --universal-border-radius: 5px;
+  --main-color: @main-color;
+  --second-color: @second-color; 
+  --font-main: @font1;
+  --font-second: @font2;
+
+  --effect-transform-hover: scale(1.2);
+  --color-red: #f00;
+  --border-radius: 5px;
+
+}
+* {
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+body {
+  height: 100vh;
+  overflow: hidden;
+}
+body * {
+  font-family: var(--font-main);  
+}

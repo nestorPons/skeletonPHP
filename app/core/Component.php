@@ -118,7 +118,7 @@ class Component extends Tag
         return $txt;
     }
     /**
-     * Encapsula los estilos al 
+     * Encapsula los estilos al componente
      */
     private function style_scoped(): self
     {

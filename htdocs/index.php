@@ -30,28 +30,23 @@
 
 use \core\{Router, Prepocessor};
 
-// Zona horaria
-date_default_timezone_set("UTC");
-date_default_timezone_set("Europe/Madrid");
-
-// Entorno de desarrollo 
-define('ENV', true);
-
-// Usuarios de la aplicacion con sus niveles
-define('LEVEL_USER', 0);
-define('LEVEL_ADMIN', 1);
-define('KEY_JWT', 'elahs93uojeqkjpmi3io23');
-
 // Ruteado de todas los archivos del proyecto 
 define('ROOT' ,dirname(__DIR__) . '/');
 require_once ROOT . 'app/config/routes.php';
 require_once ROOT . 'vendor/autoload.php';  
 define('CONFIG', parse_ini_file(\FILE\CONFIG));
 
-// Desarrollo solo se ejecuta en la puerta principal en la primera petición
-if( ENV ){
+date_default_timezone_set("UTC");
+date_default_timezone_set(\CONFIG['timezone']);
+
+// Desarrollo
+if( CONFIG['develop'] ){
     error_reporting(E_ALL);
     ini_set('display_errors', '1');
+    header('Expires: Sun, 01 Jan 2014 00:00:00 GMT');
+    header('Cache-Control: no-store, no-cache, must-revalidate');
+    header('Cache-Control: post-check=0, pre-check=0', FALSE);
+    header('Pragma: no-cache');
     require_once \FOLDER\HELPERS  . 'dev.php';
     
     new Prepocessor(false);

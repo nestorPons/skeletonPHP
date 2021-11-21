@@ -11,7 +11,8 @@ class Prepocessor
     // Constantes globales de las rutas de la aplicación 
     // (app/config/routes.php)
     const
-        BUNDLE_JS =  \FILE\BUNDLE_JS, 
+        BUNDLE_CSS =  \FILE\BUNDLE_CSS,
+        BUNDLE_JS =  \FILE\BUNDLE_JS,
         BUILD = \FOLDER\PUBLIC_FOLDER,
         CACHE_FILE = \CACHE\VIEWS,
         FOLDERS_NATIVE_VIEWS = \FOLDER\VIEWS,
@@ -23,31 +24,30 @@ class Prepocessor
         $cache,
         $isModified = false,
         $content,
-        $queue,
         $queueJS = [],
         $loadeds = [],
-        $bc;                        // var de proteccion para buclesº
+        $bc;                       
 
     function __construct(bool $cacheable = true)
     {
         // Se eliminan todos los archivos de la carpeta build (reinicializa)
+
         $this->deleteDirectory(self::BUILD);
-        
-        
 
         // Indicamos si cacheamos el proceso
         $this->cacheable = $cacheable;
         $this->cache = (file_exists(self::CACHE_FILE)) ? parse_ini_file(self::CACHE_FILE) : [];
 
-        // Reseteamos el archivo de construccion build de js para agrupar todo el codigo js minificado
+        // Reseteamos los archivos de construccion
+        if (file_exists(self::BUNDLE_CSS)) unlink(self::BUNDLE_CSS);
         if (file_exists(self::BUNDLE_JS)) unlink(self::BUNDLE_JS);
         if (!file_exists(self::BUILD)) mkdir(self::BUILD, 0775, true);
 
         // Compilamos los archivos js
         $this->listar(\FOLDER\JS);
-        //Añade el link del bundle js
-        $this->queue = "<script src='" . self::BUNDLE_JS . "'></script>";
-                
+        // Compilamos los archivos css
+        $this->listar(\FOLDER\STYLES);
+
         // Inicia compilacion de los archivos
         // Primero aseguramos la carga de los componentes
         $this->show_files(self::FOLDERS_NATIVE_VIEWS);
@@ -68,7 +68,7 @@ class Prepocessor
                     $this->file = $file;
                     $file_build =  self::BUILD . $build_path;
                     $this->path = $path;
-                    
+
                     if (is_dir($file)) {
                         // DIRECTORIOS 
                         if (!file_exists($file_build)) mkdir($file_build, 0775, true);
@@ -90,7 +90,7 @@ class Prepocessor
      */
     private function build($file, $file_build): self
     {
-        // Obtenemos el ontenido del archivo se instancia Tag
+        // Obtenemos el ontsenido del archivo se instancia Tag
         $this->get_content($file);
 
         // Quitamos los comentarios 
@@ -102,10 +102,15 @@ class Prepocessor
         // Construimos el build.js con todas las clases
         $this->build_js();
 
-        if ($file == self::MAIN_PAGE) $this->queue();
+        if ($file == self::MAIN_PAGE) {
+            $queueCSS = '<link rel="stylesheet" href="'.self::BUNDLE_CSS.'">';
+            $this->el->replace('</head>', $queueCSS . '</head>');
+            $queueJS = "<script src='" . self::BUNDLE_JS . "'></script>";
+            $this->el->replace('</body>', $queueJS . '</body>');
+        }
 
         // Compresión salida html
-        //$this->compress_code();
+        $this->compress_code();
 
         file_put_contents($file_build, $this->el->element());
 
@@ -117,9 +122,11 @@ class Prepocessor
         $this->el = new Tag(file_get_contents($file));
         return $this;
     }
-    // Funcion que aplica una sintaxis propia  a las vistas
-    // Proceso de compilación de las plantillas
-    private function sintax() : self
+    /** 
+     * Funcion que aplica una sintaxis propia  a las vistas
+     * Proceso de compilación de las plantillas
+     */
+    private function sintax(): self
     {
         // Añadimos el id al documento
         $this->el->replace('--id', $this->el->id());
@@ -149,12 +156,12 @@ class Prepocessor
             $tag->del('scoped');
         }
 
-        return $this; 
+        return $this;
     }
     /**
      * Buscamos componentes principales en el html los posibles anidos se pasan por string al componente
      */
-    private function declare_component() : self
+    private function declare_component(): self
     {
         foreach ($this->search_components($this->el->body()) as $tag) {
 
@@ -280,11 +287,31 @@ class Prepocessor
         $this->el->element(preg_replace($search, $replace, $this->el->element()));
         return $this;
     }
-    private function less(String $content)
+    /**
+     * Minifica el Less y transforma a css
+     */
+    private function less_compiler(String $content) : String{
+        //COMPILAMOS LESS
+        $less = new \lessc;
+        return $less->compile($content);
+    }
+    /**
+     * Minifica el css 
+     */
+    private function css_minify(String $content): String{
+        // MINIMIFICAMOS
+        $minifier = new Minify\CSS;
+        $minifier->add($content);
+        return $minifier->minify();
+
+    }
+    /**
+     * 
+     */
+    private function less(String $content) : self
     {
         //COMPILAMOS LESS
         $less = new \lessc;
-
         $content_less = $less->compile($content);
         // MINIMIFICAMOS
         $minifier = new Minify\CSS;
@@ -292,6 +319,8 @@ class Prepocessor
         $content_min = $minifier->minify();
 
         $this->el->replace($content, $content_min);
+
+        return $this;
     }
     /**
      *   Devuelve todos los argumentos de un tag
@@ -303,7 +332,7 @@ class Prepocessor
         /**
          * 0 -> Todo
          * 1 -> tag
-         * 2 -> argimentos
+         * 2 -> argumentos
          * 3 -> contenido
          */
         if (
@@ -315,7 +344,9 @@ class Prepocessor
         }
         return $a ?? [];
     }
-    // Procesa la sintaxis de los elementos @include()
+    /**
+     * Procesa la sintaxis de los elementos @include()
+     */ 
     private function includes(): self
     {
         if (
@@ -336,7 +367,9 @@ class Prepocessor
         }
         return $this;
     }
-    // Busca sibolo $$ para y lo reemplaza por variables php
+    /**
+     * Busca sibolo $$ para y lo reemplaza por variables php
+     */
     private function sintax_vars(): self
     {
         $content = $this->el->body();
@@ -350,11 +383,6 @@ class Prepocessor
             $this->el->body($content);
         }
 
-        return $this;
-    }
-    private function queue(): self
-    {
-        $this->el->replace('</body>', $this->queue . '</body>');
         return $this;
     }
     /**
@@ -433,7 +461,7 @@ class Prepocessor
     /**
      * Carga de las clases hijas js
      */
-    private function load_class_childrens()
+    private function load_class_childrens(): void
     {
         foreach ($this->queueJS as $key => $value) {
             if (in_array($value[1], $this->loadeds)) {
@@ -441,7 +469,7 @@ class Prepocessor
             }
         }
     }
-    private function cache_record(array $cache)
+    private function cache_record(array $cache) : bool
     {
         if ($this->isModified) {
             $out = '';
@@ -452,11 +480,14 @@ class Prepocessor
             return true;
         } else return false;
     }
-    private function deleteDirectory($dir)
+
+    /**
+     * Resetea el contenido de las carpetas del proyecto 
+     */
+    private function deleteDirectory(string $dir): self
     {
         if (!$dh = @opendir($dir)) {
-            // Si no lo encuentra lo crea
-            mkdir($dir, 0777);
+            mkdir($dir, 0777); // Si no la encuentra lo crea
         } else {
             while (false !== ($current = readdir($dh))) {
                 if ($current != '.' && $current != '..') {
@@ -466,35 +497,62 @@ class Prepocessor
             }
             closedir($dh);
         }
+        return $this;
     }
-    private function listar($path){
-        //Funcion que comprueba la fecha de la ultima compilación si es mas nueva que el archivo compilado
-        function checkedCompile($in, $out) {
-            if(file_exists($out)) return (filemtime($in) > filemtime($out));
-            return true;
-        }
+    /**
+     * Minifica, comprime y agrupa el contenido JS 
+     */
+    private function listar(string $path) : void
+    {
+        $arr_files = [];
+        $str_js = '';
+        $str_css = ''; 
         if ($folder = opendir($path)) {
             while (false !== ($file = readdir($folder))) {
                 // Filtramos directorios padres
-                if($file != '..' && $file != '.' ){
+                if ($file != '..' && $file != '.') {
                     // Comprobamos si es un archivo
-                    if(is_dir($path.$file)) $this->listar($path.$file.'/'); 
-                    // Comprobamos que sea un archivo js 
-                    $ext = explode('.',$file);
-                    $content_minify = '';
-                    if(isset($ext[1]) && $ext[1] === 'js'){
-                        if(checkedCompile($path . $file, $path . "{$ext[0]}.min.js")){
-                            $minifier_JS = new Minify\JS($path . $file);
-                            $content_minify .= $minifier_JS->minify() . ';';
-                        }
-                    }
-
-                    // Se crea el archivo único para JS 
-                    $file_handle = fopen(self::BUNDLE_JS , 'a+');
-                    fwrite($file_handle,$content_minify);
-                    fclose($file_handle);
+                    if (is_dir($path . $file)) $this->listar($path . $file . '/');
+                    $arr_files[] = $file;
                 }
             }
+            // Ordenamos los archivos para respetar el orden de los css
+            sort($arr_files);
+            foreach($arr_files as $file){
+                // Comprobamos que sea un archivo js 
+                $ext = explode('.', $file);
+                if (isset($ext[1]) && $ext[1] === 'js') {
+                    if ($this->checkedCompile($path . $file, $path . "{$ext[0]}.min.js")) {
+                        $minifier_JS = new Minify\JS($path . $file);
+                        $str_js .= $minifier_JS->minify() . ';';
+                    }
+                }elseif(isset($ext[1]) && $ext[1] === 'less'){
+                    // Archivos de estilos less
+                    $content = file_get_contents($path . $file) or die('No se puede abrir el archivo:' . $file);
+                    $compile = $this->less_compiler($content);
+                    $compile = $this->css_minify($compile);
+                    $str_css .= $compile;
+                }
+
+            }
+            // Se crea el archivo único para JS 
+            $file_handle = fopen(self::BUNDLE_JS, 'a+');
+            fwrite($file_handle, $str_js);
+            fclose($file_handle);
+            // Se crea el archivo único para CSS 
+            $file_handle = fopen(self::BUNDLE_CSS, 'a+');
+            fwrite($file_handle, $str_css);
+            fclose($file_handle);
+
+
         }
+    }
+    /**
+     * Comprueba la fecha de la ultima compilación si es mas nueva que el archivo compilado
+     */
+    function checkedCompile($in, $out)
+    {
+        if (file_exists($out)) return (filemtime($in) > filemtime($out));
+        return true;
     }
 }

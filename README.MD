@@ -3,4 +3,8 @@
 Sistema de carga ultra rapido por módulos
 
 
-Enrutador
+### Configuración 
+Puede configurar la aplicación en:
+```
+config/config.ini
+```

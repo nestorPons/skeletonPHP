@@ -22,6 +22,7 @@ const STYLES        = SRC . 'styles/';
 namespace FILE; 
 const CONFIG     = \FOLDER\CONFIG . 'config.ini';
 const BUNDLE_JS  = \FOLDER\PUBLIC_FOLDER . 'bundle.js';
+const BUNDLE_CSS = \FOLDER\PUBLIC_FOLDER . 'bundle.css';
 
 namespace CACHE;
 const VIEWS = \FOLDER\CACHES . 'cache_views.ini';
