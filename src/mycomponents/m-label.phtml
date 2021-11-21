@@ -1,0 +1,31 @@
+<component id="--id" class="label_square">
+    <label class="caption">$$label</label>
+    <label class="value text">$$value</label>
+    <label class="text">€</label>
+    <style scoped>
+        position: relative;
+        display: inline-flex;
+        justify-content: center;
+        width: 40%;
+        height: 4ch;
+        border-radius: 5px;
+        align-items: center;
+        border: 1px solid #888;
+        color: $$color;
+
+        .text {
+            font-size: 1.2rem;
+        }
+
+        .caption {
+            font-size: 0.8rem;
+            position: absolute;
+            top: -2ch;
+            left: 1ch;
+            background-color: var(--back-color);
+            padding: 0 4px;
+
+        }
+    </style>
+    
+</component>

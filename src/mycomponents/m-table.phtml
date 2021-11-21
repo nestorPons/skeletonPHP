@@ -1,0 +1,63 @@
+<component id="--id">
+    <table class="$$class">
+        <thead>
+            @for($$columns)
+                <th class="$$value">$$value</th>
+            @endfor
+        </thead>
+        <tbody></tbody>
+        @if ($$total)
+        <tfoot>
+            <tr>
+                <td>TOTAL: </td>
+                <td><span class="id_total"></span></td>
+            </tr>
+        </tfoot>
+        @endif
+    </table>
+    <template>
+        <tr onclick="$$onclick" ondblclick="$$ondblclick">
+            @for($$columns)
+                <td class="$$value" data-label=""></td>
+            @endfor
+        </tr>
+    </template>
+    <style lang="less" scoped>
+        tfoot {
+            order: 3;
+            width: 100%;
+
+            tr {
+                text-align: right;
+            }
+        }
+
+        table {
+            max-height: 75vh;
+        }
+
+        &.hoverable tbody {
+            cursor: pointer;
+        }
+
+        .id {
+            max-width: 6ch;
+        }
+
+        @media (max-width: 997px) {
+            table {
+                max-height: 65vh;
+            }
+
+            th,
+            td {
+                padding: 0;
+            }
+
+            thead {
+                height: inherit !important;
+            }
+        }
+    </style>
+    
+</component>

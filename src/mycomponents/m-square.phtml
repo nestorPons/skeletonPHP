@@ -1,0 +1,71 @@
+<component id="--id" class="menu-square">
+    <label for="--id" class="active">$$title</label>
+    <content>
+        --content
+        <i class="lnr lnr-cross-circle icon-close"></i>
+    </content>
+    <style lang="less" scoped>
+
+            /* transition: display 2s linear; */
+            transition: all 2.5s ease 0.5s;
+            transition: display 2.5s ease 0.5s;
+
+            label {
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                height: 200px;
+                width: 200px;
+
+                border: 1px solid var(--main-color);
+                color: var(--main-color);
+                border-radius: var(--universal-border-radius);
+            }
+
+            content {
+                i {
+                    position: relative;
+                    top: 21px;
+                    right: 10px;
+                    font-size: 1.2rem;
+                }
+            }
+
+            label,
+            content {
+                display: none;
+            }
+            .active {
+                display: inline-flex !important;
+            }
+            &.close-menu {
+                display: none !important;
+            }
+        
+    </style>
+    <script scoped>
+        const el = document.getElementById('--id'),
+            ic = el.querySelector('.icon-close'),
+            cnt = el.querySelector('content'),
+            lbl = el.querySelector('label'),
+            menus = document.getElementsByClassName('menu-square');
+
+        el.onclick = e => {
+            e.stopPropagation();
+                        for(const m of menus){
+                m.classList.add('close-menu');
+            }
+            lbl.parentNode.classList.remove('close-menu');
+                        lbl.classList.remove('active');
+            cnt.classList.add('active');
+        }
+        ic.onclick = e => {
+            e.stopPropagation()
+            for(const m of menus){
+                m.classList.remove('close-menu')
+            }
+            cnt.classList.remove('active')
+            lbl.classList.add('active')
+        }
+    </script>
+</component>

@@ -1,0 +1,20 @@
+
+<component id="--id" class="row col-sm-12 col-md-12">
+    <select type="search" id="el--id" list="--id_datalist" class="$$class $$default" placeholder=" " style="$$style" name="$$name" tile="$$tile" pattern="$$pattern" list="$$list" tabindex="$$tabindex" onfocus="$$onfocus" onblur="$$onblur" onclick="$$onclick" onkeydown="$$onkeydown" onkeyup="$$onkeyup" onchange="$$onchange" onkeypress="$$onkeypress" $$required $$disabled $$readonly $$checked>
+        @if($$default)
+            <option value=""></option>
+        @endif
+        @for($$options)
+        <option value="$$key">$$value</option>
+        @endfor
+    </select>
+    <label for="el--id">$$label</label>
+    <style lang="less" scoped>
+        height: 86%;
+
+        select {
+            width: 100%;
+        }
+    </style>
+    
+</component>

@@ -1,0 +1,27 @@
+
+Options +FollowSymLinks -MultiViews -Indexes
+
+RewriteEngine On
+RewriteBase /
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{SERVER_PORT} 80
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}.php -f
+
+RewriteRule ^img/(.*)$ - [L]
+RewriteRule ^js/(.*)$ - [L]
+RewriteRule ^font/(.*)$ - [L]
+RewriteRule ^sources/(.*)$ - [L]
+RewriteRule ^dist/(.*)$ - [L]
+RewriteRule ^css/(.*)$ - [L]
+RewriteRule ^node_modules/(.*)$ - [L]
+RewriteRule ^companies/(.*)$ - [L]
+RewriteRule ^build/(.*)$ - [L]
+
+RewriteRule ^([a-zA-Z0-9]+)/([a-zA-Z0-9]+)/([a-zA-Z0-9]+)/([a-zA-Z0-9]+)$ /index.php?a=$1&b=$2&c=$3&d=$4 [R,L]
+RewriteRule ^([a-zA-Z0-9]+)/([a-zA-Z0-9]+)/([a-zA-Z0-9]+)$ /index.php?a=$1&b=$2&c=$3 [R,L]
+RewriteRule ^([a-zA-Z0-9]+)/([a-zA-Z0-9]+)$ /index.php?a=$1&b=$2 [R,L]
+RewriteRule ^([a-zA-Z0-9]+)$ /index.php?a=$1 [R,L]
+
+ErrorDocument 404 error404.php
