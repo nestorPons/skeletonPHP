@@ -1,0 +1,23 @@
+site_name: SkeletonPHP
+repo_url: https://github.com/nestorPons/skeletonPHP
+site_description: "Framework modular."
+site_author: Néstor Pons
+nav:
+  - Inicio: 'index.md'
+  - Estructura: 'estructura.md'
+theme:
+#    name: material
+    logo:
+        icon: img/fish-skeleton-hand-drawn-bones.png
+    favicon: img/fish-skeleton-hand-drawn-bones.png
+    language: es
+#    palette:
+#        primary: teal
+#        accent: orange
+extra:
+  social:
+    - type: 'github'
+      link: 'https://github.com/nestorpons'
+markdown_extensions:
+  - codehilite
+  - admonition

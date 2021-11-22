@@ -1,6 +1,6 @@
 # Skeleton AXAJ-PHP
 
-Sistema de carga ultra rapido por módulos. 
+Sistema de carga rapido por módulos. 
 Carga modular de cualquier contenido sin tener que repetir la total carga de todo el contenido de la aplicación.
 
 ├── app                     → Cuerpo de la aplicación
