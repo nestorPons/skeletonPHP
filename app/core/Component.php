@@ -12,7 +12,6 @@ class Component extends Tag
 
     function __construct(string $type, $data = null, string $content = null)
     {
-
         if ($data) {
             if (is_string($data)) {
                 // Tratamos el texto si lleva tags de php

@@ -110,7 +110,8 @@ class Prepocessor
         }
 
         // Compresión salida html
-        $this->compress_code();
+        // AKI:: Descomentar la siguiente linea 
+        // $this->compress_code();
 
         file_put_contents($file_build, $this->el->element());
 
@@ -516,22 +517,25 @@ class Prepocessor
                     $arr_files[] = $file;
                 }
             }
-            // Ordenamos los archivos para respetar el orden de los css
+            // Ordenamos los archivos para respetar la propiedad de cascada en los estilos
             sort($arr_files);
             foreach($arr_files as $file){
                 // Comprobamos que sea un archivo js 
-                $ext = explode('.', $file);
-                if (isset($ext[1]) && $ext[1] === 'js') {
-                    if ($this->checkedCompile($path . $file, $path . "{$ext[0]}.min.js")) {
-                        $minifier_JS = new Minify\JS($path . $file);
-                        $str_js .= $minifier_JS->minify() . ';';
+                $ex = explode('.', $file);
+                $ext = end($ex);
+                if(isset($ext) ){
+                    if ( $ext === 'js' ) {
+                        if ($this->checkedCompile($path . $file, $path . "{$ext[0]}.min.js")) {
+                            $minifier_JS = new Minify\JS($path . $file);
+                            $str_js .= $minifier_JS->minify() . ';';
+                        }
+                    }elseif( $ext === 'less' || $ext === 'css' ){
+                        // Archivos de estilos less
+                        $content = file_get_contents($path . $file) or die('No se puede abrir el archivo:' . $file);
+                        if ($ext === 'less') $content = $this->less_compiler($content);
+                        $compile = $this->css_minify($content);
+                        $str_css .= $compile;
                     }
-                }elseif(isset($ext[1]) && $ext[1] === 'less'){
-                    // Archivos de estilos less
-                    $content = file_get_contents($path . $file) or die('No se puede abrir el archivo:' . $file);
-                    $compile = $this->less_compiler($content);
-                    $compile = $this->css_minify($compile);
-                    $str_css .= $compile;
                 }
 
             }
