@@ -4,7 +4,6 @@ function pr(...$args){
     foreach($args as $arr){
 
         var_dump($arr);
-
     }
 }
 function prs(...$args){

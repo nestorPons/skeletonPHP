@@ -1,5 +1,5 @@
 # Carpetas del proyecto
-├── app                     # Cuerpo de la aplicación                       <br>
+├── app                     # Cuerpo de la aplicación<br>
 │   ├── config              # Archivos de configuración editables <br>
 │   ├── core<br>
 │   ├── db<br>
