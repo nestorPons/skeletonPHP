@@ -17,14 +17,13 @@ class Component extends Tag
                 // Tratamos el texto si lleva tags de php
                 $data = self::search_globals_vars($data);
                 $arr_pattern = self::extract_pattern_attr($data);
-
                 if($arr_pattern[0]) {
                     $this->attrs('pattern',$arr_pattern[1]);
                     $data = $arr_pattern[2]; 
                 }
                 $data = self::my_json_decode($data);
             }
-
+            
             foreach ($data as $key => $val) {
                 $this->attrs($key, $val);
             }
@@ -73,10 +72,18 @@ class Component extends Tag
         // Modificando las propiedades o tags de los elementos html
 
         // Procesando condicional if
-
         $this->sintax_if();
         // Bucle for 
         $this->sintax_for();
+        // Valor variables
+        $this->vars();
+        return $this;
+    }
+    /**
+     * Busca y añade el valor de las variables
+     */
+    private function vars() : self
+    {
 
         if (
             $len = preg_match_all('/\$\$(\w+\-?\w*)/is', $this->element(), $matches)
@@ -85,8 +92,9 @@ class Component extends Tag
             for ($i = 0; $i < $len; $i++) {
                 $prop = $matches[1][$i];
                 if (!is_null($this->attrs($prop))) {
-                    $value = $this->attrs($prop) ?? '';
+                    $value = $this->attrs($prop) ?: '';
                     $this->replace('$$' . $prop, $value);
+
                 } else {
                     // En caso que no exista la propiedad la eliminamos 
                     $regex = "/\w+?\s*=\s*[\"']\s*\\$\\$$prop\b\"/";
@@ -160,18 +168,24 @@ class Component extends Tag
     }
     private function sintax_if(): self
     {
-        $has = preg_match_all('/@if\s*?\((.*?)\)(.*?)@endif/sim', $this->body(), $matches);
+        $count = preg_match_all('/@if\s*?\((.*?)\)(.*?)@endif/sim', $this->body(), $matches);
 
-        if ($has) {
+        if ($count) {
             for ($i = 0; $i < count($matches[0]); $i++) {
-                $prop = trim($matches[1][$i], '$$');
+                $condition = $matches[1][$i]; 
+                $sentences = explode('@else', $matches[2][$i]);
+                $first_sen = $sentences[0];
+                $second_sen = isset($sentences[1])?$sentences[1]:false;
 
-                if ($this->attrs($prop)) {
-                    $this->replace($matches[0][$i], $matches[2][$i]);
-                } else {
-                    // Si no existe la propiedad quitamos el elemento
-                    $this->replace($matches[0][$i], '');
+                // Si estamos comprobando si una propiedad existe en el objeto
+                if(preg_match('/\$\$\w+/', $condition, $match)){
+                    $prop = trim($matches[1][$i], '$$');        
+                    $value = $this->attrs($prop) 
+                        ? $first_sen 
+                        : ($second_sen ?: ''); 
+                    $this->replace($matches[0][$i], $value);
                 }
+
             }
         }
         return $this;

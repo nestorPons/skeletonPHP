@@ -236,7 +236,7 @@ class Tag
      * @param string getter con valor a devolver 
      * @param null getter sin argumento devuelve todos 
      */
-    public function attrs($arg = null, $val = null)
+    public function attrs($arg = null, $val = null) 
     {
         if (!is_null($arg)) {
             if (!is_null($val)) {

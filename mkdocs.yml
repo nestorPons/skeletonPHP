@@ -4,7 +4,8 @@ site_description: "Framework modular."
 site_author: Néstor Pons
 nav:
   - Inicio: 'index.md'
-  - Estructura: 'estructura.md'
+  - Crpetas: 'folders.md'
+  - Componentes: 'components.md'
 theme:
     name: readthedocs
     logo:

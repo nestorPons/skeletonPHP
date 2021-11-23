@@ -17,56 +17,108 @@
     
     
 
-    <title>Bienvenida</title>
+    <title>Skeleton Framework</title>
 <link rel="stylesheet" href="www/bundle.css"></head>
 
 <body>
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-12 col-md-3 col-lg-2"></div>
-            <div class="col-sm-12 col-md-5 col-lg-7">
+    <div class="header">
+        <img src="fish-skeleton-hand-drawn-bones.png">
+        <h1>Skeleton Framework AJAX-PHP</h1>
+    </div>
 
-                <section id="principal" class="principal">
-                    <div>
-                        <h1>SKELETON FRAMEWORK</h1>
-                        <p>
-                            Marco de trabajo PHP, HTML, AJAX, JS mediante componentes encapsulados.
-                        </p>
+    
 
-                        <div class="collapse">
-                            <input type="checkbox" id="collapse-section1" checked aria-hidden="true">
-                            <label for="collapse-section1" aria-hidden="true">Framworks CSS y JS</label>
-                            <div>
-                                <p>Puedes incorporar los Frameworks CSS y JS que más te gusten</p>
-                                <p>En el proyecto se trabaja con MINICSS el cual es libiano y totalmente personalizable con todo aquello que es indispensable para cualquier proyecto</p>
-                            </div>
-                            <input type="checkbox" id="collapse-section2" aria-hidden="true">
-                            <label for="collapse-section2" aria-hidden="true">Collapse section 2</label>
-                            <div>
-                                <p>This is the second section of the collapse</p>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-            </div>
-            <div class="col-sm-12 col-md-4 col-lg-3"></div>
+    <div class="row">
+        <div class="leftcolumn">
+            <secction id="main" class="">
+                <h3>Características</h3>
+                <ul>
+                    <li>Modular</li>
+                    <li>Rápido</li>
+                    <li>Altamente reutilizable</li>
+                </ul>
+            </secction>
         </div>
-        <div class="row">
-            <div class="col-sm-12 col-md-3 col-lg-2"></div>
-            <div class="col-sm-12 col-md-5 col-lg-7">
-                <p>Demostración de encapsulación de componentes.</p>
-                <div class="card small">
-                    <?php $c = new \core\Component('m-template-component', '{"label":"Pulse en este label"}', ''); $c->print();?>
+        <div class="rightcolumn">
+            <?php $c = new \core\Component('m-btn-success', '{"onclick":"alert(`\u00a1Esto es un ejemplo de la acci\u00f3n de un componente!`)"}', 'null'); $c->print();?>
+            <div class="card">
+                <h2>About Me</h2>
+                <div class="fakeimg" style="height:100px;">Image</div>
+                <p>Some text about me in culpa qui officia deserunt mollit anim..</p>
+            </div>
+            <div class="card">
+                <h2>About Me</h2>
+                <div class="fakeimg" style="height:100px;">Image</div>
+                <p>Some text about me in culpa qui officia deserunt mollit anim..</p>
+            </div>
+            <div class="card">
+                <h3>Popular Post</h3>
+                <div class="fakeimg">
+                    <p>Image</p>
                 </div>
-                <div class="card small warning">
-                    <label> Este label carece de acción y de estilos propios </label>
+                <div class="fakeimg">
+                    <p>Image</p>
+                </div>
+                <div class="fakeimg">
+                    <p>Image</p>
                 </div>
             </div>
-            <div class="col-sm-12 col-md-4 col-lg-3"></div>
+            <div class="card">
+                <h3>Follow Me</h3>
+                <p>Some text..</p>
+            </div>
         </div>
     </div>
 
+    <div class="footer">
+        <a href="https://nestorpons.github.io/skeletonPHP/site/">Manual SkeletonPHP</a>
+    </div>
 <script src='www/bundle.js'></script></body>
 
 </html>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12 col-md-3 col-lg-2"></div>
+        <div class="col-sm-12 col-md-5 col-lg-7">
+
+            <section id="principal" class="principal">
+                <div>
+                    <h1>SKELETON FRAMEWORK</h1>
+                    <p>
+                        Marco de trabajo PHP, HTML, AJAX, JS mediante componentes encapsulados.
+                    </p>
+
+                    <div class="collapse">
+                        <input type="checkbox" id="collapse-section1" checked aria-hidden="true">
+                        <label for="collapse-section1" aria-hidden="true">Framworks CSS y JS</label>
+                        <div>
+                            <p>Puedes incorporar los Frameworks CSS y JS que más te gusten</p>
+                            <p>En el proyecto se trabaja con MINICSS el cual es libiano y totalmente personalizable con todo aquello que es indispensable para cualquier proyecto</p>
+                        </div>
+                        <input type="checkbox" id="collapse-section2" aria-hidden="true">
+                        <label for="collapse-section2" aria-hidden="true">Collapse section 2</label>
+                        <div>
+                            <p>This is the second section of the collapse</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+        <div class="col-sm-12 col-md-4 col-lg-3"></div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12 col-md-3 col-lg-2"></div>
+        <div class="col-sm-12 col-md-5 col-lg-7">
+            <p>Demostración de encapsulación de componentes.</p>
+            <div class="card small">
+                
+                <m-template-component label="Pulse en este label"></m-template-component>
+            </div>
+            <div class="card small warning">
+                <label> Este label carece de acción y de estilos propios </label>
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-4 col-lg-3"></div>
+    </div>
+</div>

@@ -7,6 +7,11 @@
         >
         @if ($$spinner) <i class="spinner hidden"></i> @endif
         @if ($$icon) <i class="lnr lnr-$$icon"></i> @endif
-        <span class="caption">Aceptar</span>
+        @if ($$caption) 
+            <span class="caption">$$caption</span> 
+        @else
+            <span class="caption">Aceptar</span> 
+        @endif
+        
     </button>
 </component>

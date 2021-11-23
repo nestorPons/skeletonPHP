@@ -166,7 +166,7 @@ class Prepocessor
     {
         foreach ($this->search_components($this->el->body()) as $tag) {
 
-            $content = $tag->body() ?? 'null';
+            $content = $tag->body() ?: 'null';
             $str_content = addslashes($content);
 
             $str_at = json_encode($tag->attrs());
@@ -187,6 +187,7 @@ class Prepocessor
 
         $regex_conditional = '/@if(\s)*?\((.)*?\)(.)*?@endif/sim';
         $start_condition = '/@if(\s)*?\((.)*?\)/sim';
+        $midle_condition = '/@else(\s)*?\((.)*?\)/sim';
         $end_condition = '/@endif/i';;
 
         if (
@@ -206,6 +207,8 @@ class Prepocessor
                         $replace = preg_replace($end_condition, '', $replace);
                         $this->el->replace($value, $replace);
                     } else {
+                        // Buscamos la segunda condición si existe
+                        
                         // Eliminamos todo el condicional 
                         $this->el->replace($value, '');
                     }
@@ -343,7 +346,7 @@ class Prepocessor
                 $a[$i] = new Tag($matches[0][$i]);
             }
         }
-        return $a ?? [];
+        return @$a ?: [];
     }
     /**
      * Procesa la sintaxis de los elementos @include()
@@ -378,7 +381,7 @@ class Prepocessor
             preg_match_all('#\$\$(\w+\-?\w*)#is', $content, $matches)
         ) {
             for ($i = 0; $i < count($matches[0]); $i++) {
-                $str = '<?=$_FILES["' . trim($matches[1][$i] ?? null, '\$') . '"]?>';
+                $str = '<?=$_FILES["' . trim($matches[1][$i] ?: null, '\$') . '"]?>';
                 $content = str_replace($matches[0][$i], $str, $content);
             }
             $this->el->body($content);
