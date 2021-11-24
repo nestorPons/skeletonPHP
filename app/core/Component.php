@@ -17,13 +17,13 @@ class Component extends Tag
                 // Tratamos el texto si lleva tags de php
                 $data = self::search_globals_vars($data);
                 $arr_pattern = self::extract_pattern_attr($data);
-                if($arr_pattern[0]) {
-                    $this->attrs('pattern',$arr_pattern[1]);
-                    $data = $arr_pattern[2]; 
+                if ($arr_pattern[0]) {
+                    $this->attrs('pattern', $arr_pattern[1]);
+                    $data = $arr_pattern[2];
                 }
                 $data = self::my_json_decode($data);
             }
-            
+
             foreach ($data as $key => $val) {
                 $this->attrs($key, $val);
             }
@@ -39,14 +39,9 @@ class Component extends Tag
 
         $this->id($id);
 
-        // Tratamos el texto si lleva tags de php
-        $content = stripcslashes($content);
-        $content = self::search_globals_vars($content);
-
-        // Buscamos la palabra reservada --content y la cambiamos por el contenido 
-        $this->replace('--content', $content);
         $this
             ->sintax()
+            ->processor_content($content)
             ->style_scoped()
             ->script_scoped()
             ->clear();
@@ -71,6 +66,7 @@ class Component extends Tag
         // Imprimiendo las variables de la clase a plantilla 
         // Modificando las propiedades o tags de los elementos html
 
+
         // Procesando condicional if
         $this->sintax_if();
         // Bucle for 
@@ -80,9 +76,22 @@ class Component extends Tag
         return $this;
     }
     /**
+     * Añadimos el valor que contiene el componente por la clave @value
+     */
+    private function processor_content($content): self
+    {
+        // Tratamos el texto si lleva tags de php
+        $content = stripcslashes($content);
+        $content = self::search_globals_vars($content);
+        // Buscamos la directiva @content y la cambiamos por el contenido 
+        $this->replace('@content', $content);
+
+        return $this;
+    }
+    /**
      * Busca y añade el valor de las variables
      */
-    private function vars() : self
+    private function vars(): self
     {
 
         if (
@@ -94,7 +103,6 @@ class Component extends Tag
                 if (!is_null($this->attrs($prop))) {
                     $value = $this->attrs($prop) ?: '';
                     $this->replace('$$' . $prop, $value);
-
                 } else {
                     // En caso que no exista la propiedad la eliminamos 
                     $regex = "/\w+?\s*=\s*[\"']\s*\\$\\$$prop\b\"/";
@@ -117,7 +125,7 @@ class Component extends Tag
             for ($i = 0; $i < $len; $i++) {
                 $var = $_FILES[$matches[1][$i]];
 
-                $val = is_array($var) ? json_encode($var) : $var; 
+                $val = is_array($var) ? json_encode($var) : $var;
                 $txt = str_replace($matches[0][$i], $val, $txt);
             }
         }
@@ -172,20 +180,19 @@ class Component extends Tag
 
         if ($count) {
             for ($i = 0; $i < count($matches[0]); $i++) {
-                $condition = $matches[1][$i]; 
+                $condition = $matches[1][$i];
                 $sentences = explode('@else', $matches[2][$i]);
                 $first_sen = $sentences[0];
-                $second_sen = isset($sentences[1])?$sentences[1]:false;
+                $second_sen = isset($sentences[1]) ? $sentences[1] : false;
 
                 // Si estamos comprobando si una propiedad existe en el objeto
-                if(preg_match('/\$\$\w+/', $condition, $match)){
-                    $prop = trim($matches[1][$i], '$$');        
-                    $value = $this->attrs($prop) 
-                        ? $first_sen 
-                        : ($second_sen ?: ''); 
+                if (preg_match('/\$\$\w+/', $condition, $match)) {
+                    $prop = trim($matches[1][$i], '$$');
+                    $value = $this->attrs($prop)
+                        ? $first_sen
+                        : ($second_sen ?: '');
                     $this->replace($matches[0][$i], $value);
                 }
-
             }
         }
         return $this;
@@ -200,15 +207,15 @@ class Component extends Tag
             for ($i = 0; $i < $len; $i++) {
                 $content = '';
                 $cont = $matches[2][$i];
-                $variable = $matches[1][$i]; 
+                $variable = $matches[1][$i];
 
                 $cond = (preg_match('/\$\$/', $variable))
-                //Comprobamos si el argumento para el bucle es una variable
-                ? $this->attrs(trim($variable, '$$'))
-                // Si no es una variable es un array json
-                : self::my_json_decode($variable);
-                
-                
+                    //Comprobamos si el argumento para el bucle es una variable
+                    ? $this->attrs(trim($variable, '$$'))
+                    // Si no es una variable es un array json
+                    : self::my_json_decode($variable);
+
+
                 if (is_null($cond)) {
                     $content = '';
                 } else {

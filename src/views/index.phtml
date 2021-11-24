@@ -15,115 +15,41 @@
     <!-- css -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mini.css/3.0.1/mini-default.min.css">
     <!-- <link rel="stylesheet" href="https://cdn.rawgit.com/Chalarangelo/mini.css/v3.0.1/dist/mini-default.min.css"> -->
-    <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script> -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 
     <title>Skeleton Framework</title>
 </head>
 
 <body>
     <div class="header">
-        <img src="fish-skeleton-hand-drawn-bones.png">
         <h1>Skeleton Framework AJAX-PHP</h1>
     </div>
-
-    <!--     <div class="topnav">
-        <a href="#">Link</a>
-        <a href="#">Link</a>
-        <a href="#">Link</a>
-        <a href="#" style="float:right">Link</a>
-    </div> -->
-
-    <div class="row">
-        <div class="leftcolumn">
-            <secction id="main" class="">
-                <h3>Características</h3>
-                <ul>
-                    <li>Modular</li>
-                    <li>Rápido</li>
-                    <li>Altamente reutilizable</li>
-                </ul>
-            </secction>
+    <div class="leftcolumn">
+        <secction id="main" class="">
+            <h3>Características</h3>
+            <ul>
+                <li>Modular</li>
+                <li>Rápido</li>
+                <li>Altamente reutilizable</li>
+            </ul>
+        </secction>
+        <m-btn onclick="app.get(`page2`)">click me</m-btn>
+    </div>
+    <div class="rightcolumn">
+        <div class="card">
+            <h2>Componentes tipo botón</h2>
+            <m-btn-success label="Pulsame" onclick="alert(`¡Esto es un ejemplo de un componente en acción!`)"></m-btn-success>
+            <m-btn-cancel label="Pulsame" onclick="alert(`¡Esto es un componente hermano!`)"></m-btn-cancel>
         </div>
-        <div class="rightcolumn">
-            <m-btn-success onclick="alert(`¡Esto es un ejemplo de la acción de un componente!`)"></m-btn-success>
-            <div class="card">
-                <h2>About Me</h2>
-                <div class="fakeimg" style="height:100px;">Image</div>
-                <p>Some text about me in culpa qui officia deserunt mollit anim..</p>
-            </div>
-            <div class="card">
-                <h2>About Me</h2>
-                <div class="fakeimg" style="height:100px;">Image</div>
-                <p>Some text about me in culpa qui officia deserunt mollit anim..</p>
-            </div>
-            <div class="card">
-                <h3>Popular Post</h3>
-                <div class="fakeimg">
-                    <p>Image</p>
-                </div>
-                <div class="fakeimg">
-                    <p>Image</p>
-                </div>
-                <div class="fakeimg">
-                    <p>Image</p>
-                </div>
-            </div>
-            <div class="card">
-                <h3>Follow Me</h3>
-                <p>Some text..</p>
-            </div>
+        <div class="card">
+            <h2>About Me</h2>
+            <div class="fakeimg" style="height:100px;">Image</div>
+            <p>Some text about me in culpa qui officia deserunt mollit anim..</p>
         </div>
     </div>
-
     <div class="footer">
         <a href="https://nestorpons.github.io/skeletonPHP/site/">Manual SkeletonPHP</a>
     </div>
 </body>
 
 </html>
-<div class="container">
-    <div class="row">
-        <div class="col-sm-12 col-md-3 col-lg-2"></div>
-        <div class="col-sm-12 col-md-5 col-lg-7">
-
-            <section id="principal" class="principal">
-                <div>
-                    <h1>SKELETON FRAMEWORK</h1>
-                    <p>
-                        Marco de trabajo PHP, HTML, AJAX, JS mediante componentes encapsulados.
-                    </p>
-
-                    <div class="collapse">
-                        <input type="checkbox" id="collapse-section1" checked aria-hidden="true">
-                        <label for="collapse-section1" aria-hidden="true">Framworks CSS y JS</label>
-                        <div>
-                            <p>Puedes incorporar los Frameworks CSS y JS que más te gusten</p>
-                            <p>En el proyecto se trabaja con MINICSS el cual es libiano y totalmente personalizable con todo aquello que es indispensable para cualquier proyecto</p>
-                        </div>
-                        <input type="checkbox" id="collapse-section2" aria-hidden="true">
-                        <label for="collapse-section2" aria-hidden="true">Collapse section 2</label>
-                        <div>
-                            <p>This is the second section of the collapse</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-        </div>
-        <div class="col-sm-12 col-md-4 col-lg-3"></div>
-    </div>
-    <div class="row">
-        <div class="col-sm-12 col-md-3 col-lg-2"></div>
-        <div class="col-sm-12 col-md-5 col-lg-7">
-            <p>Demostración de encapsulación de componentes.</p>
-            <div class="card small">
-                <!-- COMPONENTE PROPIO -->
-                <m-template-component label="Pulse en este label"></m-template-component>
-            </div>
-            <div class="card small warning">
-                <label> Este label carece de acción y de estilos propios </label>
-            </div>
-        </div>
-        <div class="col-sm-12 col-md-4 col-lg-3"></div>
-    </div>
-</div>

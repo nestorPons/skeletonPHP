@@ -52,34 +52,43 @@ const app = {
         });
     },
     // Carga de zonas por método get
-    // data => {controller : ... , action: (view), data : ....}
+    // controller
+    // La acción se sobreentiende por el tipo de petición GET
+    // data => { data : ....}
     // load => {
     //      (true) => carga y muestra componente/seccion además carga inicializador
     //       false => Carga el componente pero no lo muestra
     //  }
-    get(data, load = true, callback) {
-        if (typeof data.controller === 'undefined') return false;
+    get( view='index', controller='viewsTemplate', data = {}, load = true, callback ) {
+        console.log(view)
 
-        for (let i in this.GET) data[i] = this.GET[i];
+        let d = {
+            'view' : view,
+            'controller' : controller, 
+            'data': data
+        }
+       
+        this.ajax('get', d, (html, respond) => {
+            console.log(html)
 
-        this.ajax('get', data, (html, respond) => {
-            // Cargamos la seccion en diferentes lugares dependiendo en que zona nos encontramos
+/*             // Cargamos la seccion en diferentes lugares dependiendo en que zona nos encontramos
             $container = ($('main').length != 0) ? $('main') : $('body');
             if (load) {
                 $container
                     .find('section').hide().end()
                     .append(html);
                 // Inicializamos el método inicializador del objeto
-                if (app[data.controller] != undefined)
+                if (app[controller] != undefined)
                 {
-                    if (exist(app[data.controller].load)) app[data.controller].load();
+                    if (exist(app[controller].load)) app[controller].load();
                 }
-                this.sections.inicialize(data.controller);
+                this.sections.inicialize(controller);
             } else {
                 $container.append(html);
             }
             typeof callback == 'function' && callback(html);
-        }, 'html');
+*/
+        }, 'html'); 
 
     },
     ajax(type, data, callback, dataType) {

@@ -11,7 +11,7 @@
 │   ├── package.json<br>
 │   ├── package-lock.json<br>
 │   └── www                 # Contenedor de los archivos públicos compilados<br> 
-├── src                     # Codigo de nuestra aplicación modelo MVC<br>
+├── src                     # Nuestro código de nuestra aplicación modelo MVC <br>
 │   ├── controllers<br>
 │   ├── js<br>
 │   ├── models<br>

@@ -42,32 +42,35 @@ class Tag
         ) {
             $this->body = null;
         }
-        // Valores por defecto
-        $this->type = $matches[1];
+        if ( $matches ){
 
-
-        // Caso especial pattern se busca manualmente por su particularidad
-        if(preg_match("/pattern\s*=\s*([\'\"])(.*?)\\1/sim", $matches[2], $match)){
-
-            // Guardamos el elemento
-            $this->attrs('pattern', $match[2]);
-            // Lo quitamos del estring de busqueda          
-            $matches[2] = str_replace($match[0],'', $matches[2]);
-
-        }
-        if (
-            // Regex extrae atributos de una cadena como:
-            // options1={"perro1":"de", "gato1":1} class="SOEL" REQUIRED 
-            $len = preg_match_all("/(\w+)=?(([\'\"]?)[\[\{](.*?)]\\3|([\'\"])(.*?)\\5)?/sim", $matches[2], $matches)
-        ) {
-            for ($i = 0; $i < $len; $i++) {
-                $name_attr = $matches[1][$i];
-                $value = empty($matches[2][$i]) ? true : $matches[2][$i];
-                $this->attrs($name_attr, $value);
+            // Valores por defecto
+            $this->type = $matches[1];
+    
+    
+            // Caso especial pattern se busca manualmente por su particularidad
+            if(preg_match("/pattern\s*=\s*([\'\"])(.*?)\\1/sim", $matches[2], $match)){
+    
+                // Guardamos el elemento
+                $this->attrs('pattern', $match[2]);
+                // Lo quitamos del estring de busqueda          
+                $matches[2] = str_replace($match[0],'', $matches[2]);
+    
             }
+            if (
+                // Regex extrae atributos de una cadena como:
+                // options1={"perro1":"de", "gato1":1} class="SOEL" REQUIRED 
+                $len = preg_match_all("/(\w+)=?(([\'\"]?)[\[\{](.*?)]\\3|([\'\"])(.*?)\\5)?/sim", $matches[2], $matches)
+            ) {
+                for ($i = 0; $i < $len; $i++) {
+                    $name_attr = $matches[1][$i];
+                    $value = empty($matches[2][$i]) ? true : $matches[2][$i];
+                    $this->attrs($name_attr, $value);
+                }
+            }
+            $this->id = $this->attrs['id'] ?? uniqid($this->prefix);
+            if($this->id == '--id') $this->id = uniqid($this->prefix); 
         }
-        $this->id = $this->attrs['id'] ?? uniqid($this->prefix);
-        if($this->id == '--id') $this->id = uniqid($this->prefix); 
 
     }
     /**

@@ -1,6 +1,6 @@
 <?php
 
-namespace app\models;
+namespace src\models;
 
 use \app\core\{Error, Security};
 

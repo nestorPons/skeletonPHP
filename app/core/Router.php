@@ -15,7 +15,7 @@ namespace core;
  */
 
 class Router
-{   
+{
     // Vista de inicio
     const MAIN = \FOLDER\PUBLIC_FOLDER . \CONFIG['main'];
 
@@ -27,20 +27,22 @@ class Router
 
     function __construct($params)
     {
-
         $this->data = new Data;
+
         // Valores por defecto
         $this->db = \CONFIG['db'];
-        $this->controller =  ucfirst($params['con'] ?? null);
-        $this->action =  strtolower($params['ac'] ?? null);
+        $this->controller =  ucfirst($params['controller'] ?? null);
+        $this->action =  strtolower($params['action'] ?? null);
 
         if (strtoupper($_SERVER['REQUEST_METHOD']) === 'POST') $this->isPost($params);
         elseif (strtoupper($_SERVER['REQUEST_METHOD']) === 'GET')  $this->isGet();
-        
     }
     private function isGet()
     {
-        if (empty($this->db)) {
+        $this->loadController($this->controller);
+        var_dump($_GET);
+        exit('Aki');
+        /* if (empty($this->db)) {
             // Si no encontramos la base datos vamos a la pagina principal
             if (empty($this->controller)) $this->controller = 'main';
             $this->controller = $this->controller;
@@ -51,10 +53,10 @@ class Router
                 $this->controller = 'login';
             }
         }
-        exit($this->loadController($this->controller));
+        exit($this->loadController($this->controller)); */
     }
     private function isPost($params)
-    {                                                                                                                                                                                                                       
+    {
         try {
 
             // Método post recibe siempre 3 parametros 
@@ -106,10 +108,11 @@ class Router
             }
         }; */
         $nameClass = 'controllers\\' . $this->controller;
+echo($nameClass);
         $cont = $this->isController($this->controller)
             ? new $nameClass($this->action, $this->data)
             : new \core\Controller($this->action, $this->controller, $this->data);
-
+    
         return $cont;
     }
 }

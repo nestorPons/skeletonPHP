@@ -9,6 +9,6 @@ Modulos personalizados eliminando la rebundancia de código facilitando el traba
 ## Licencia
 Este proyecto está bajo la Licencia [MIT](https://opensource.org/licenses/MIT) - mira el archivo [LICENSE.md](LICENSE.md) para más detalles. 
 
-⌨Con ❤️ por [Néstor Pons](https://github.com/nestorpons) 😊
+⌨ Con ❤️ por [Néstor Pons](https://github.com/nestorpons) 😊
 
 <div>Icons made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>

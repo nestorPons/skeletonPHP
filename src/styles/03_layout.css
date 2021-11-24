@@ -1,0 +1,46 @@
+/*https://gridbyexample.com/examples/example12/*/
+
+.sidebar {
+  grid-area: sidebar;
+}
+
+.content {
+  grid-area: content;
+}
+
+.header {
+  grid-area: header;
+}
+
+.footer {
+  grid-area: footer;
+}
+
+.wrapper {
+  padding: 4%;
+  height: 90%;
+  width: 90%;
+  display: grid;
+  grid-gap: 10px;
+  grid-template-columns: 20% 70% 10%;
+  grid-template-rows: 20% 70% 10%;
+  grid-template-areas:
+    "header header header"
+    "sidebar content content"
+    "footer  footer  footer";
+  background-color: #fff;
+  color: #444;
+}
+
+.box {
+  background-color: #444;
+  color: #fff;
+  border-radius: 5px;
+  padding: 10px;
+  font-size: 150%;
+}
+
+.header,
+.footer {
+  background-color: #999;
+}
