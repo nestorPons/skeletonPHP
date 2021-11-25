@@ -65,7 +65,7 @@ const app = {
             'view' : view, 
             'data': data
         }
-       
+       console.log(data)
         this.ajax('get', d, (html, respond) => {
             // Cargamos la seccion en diferentes lugares dependiendo en que zona nos encontramos
             $container = ($('main').length != 0) ? $('main') : $('body');

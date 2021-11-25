@@ -21,16 +21,7 @@ class Controller{
         $this->Data = $Data; 
 
         }
-    function view($view, $data = null){
-  
-        $arr_data = (is_object($data)) ? $data->toArray() : $data;
 
-        // Carpetas donde buscar las vistas
-        $files[] = \FOLDER\VIEWS . $view . '.phtml'; 
-        foreach($files as $file){
-            if(file_exists($file)) return $this->printView($file, $arr_data);
-        }        
-    }
     /**
      * Método genérico para guardar registros comprueba que es nuevo o edicion y envia los datos al metodo apropiado
      */
@@ -58,18 +49,7 @@ class Controller{
     protected function get(){
         return $this->exec('get', 'getById');
     }
-    /**
-    * Prepara  las variables e imprime las vistas
-    */
-    protected function printView(String $route, array $data = null){
-        if($data){
-            foreach($data as $key => $val){
-                $k = str_replace('-', '_', $key); 
-                $_FILES[$k] = $val; 
-            }
-        }
-        return require_once $route;
-    }
+
     /**
      * Método por defecto de consulta de datos entre parametros
      */

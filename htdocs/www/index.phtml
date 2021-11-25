@@ -36,7 +36,9 @@
                 </ul>
             </section>
         </main>
-        <?php $c = new \core\Component('m-btn', '{"onclick":"app.getView(`page12`)"}', 'click me'); $c->print();?>
+        <?php $c = new \core\Component('m-btn', '{"onclick":"app.getView(`page12`)"}', 'click me Error'); $c->print();?>
+
+        <?php $c = new \core\Component('m-btn', '{"onclick":"app.getView(`page2,{`data` : `un dato` }`)"}', 'click me'); $c->print();?>
     </div>
     <div class="rightcolumn">
         <div class="card">

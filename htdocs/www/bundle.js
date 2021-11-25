@@ -2,6 +2,7 @@ const app={ver:'2.2',timeZone:Intl.DateTimeFormat().resolvedOptions().timeZone,G
 return!1}
 if(typeof data.db==='undefined')data.db=$_GET.db;this.ajax('post',data,(respond,status,xhr,dataType)=>{if(typeof navbar!='undefined')navbar.spinner.hide(data.controller);let d=null;try{d=JSON.parse(respond);console.log(d);if(error)
 if((isEmpty(d.success)||d.success==!1||d.success==0)&&exist(d.mens)){console.log('Error en la respuesta!!');this.mens.error(d.mens||'No se ha podido rehalizar la petición!');return!1}}catch(e){html=$(respond);this.sections.toggle(html.attr('id'),_=>{html.appendTo('body');html.find('section').each((i,el)=>{this.sections.loaded.push(el.id)})})}finally{let resp=d?d.data:null,state=d&&d.mens?!1:!0;typeof callback=="function"&&callback(resp,state)}})},getView(view='index',data={},load=!1,callback){let d={'view':view,'data':data}
+console.log(data)
 this.ajax('get',d,(html,respond)=>{$container=($('main').length!=0)?$('main'):$('body');$container.append(html)
 if(load){$container.find('section').hide().end().append(html);if(app[controller]!=undefined){if(exist(app[controller].load))app[controller].load()}
 this.sections.inicialize(controller)}else{$container.append(html)}

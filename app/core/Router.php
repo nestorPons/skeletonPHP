@@ -32,7 +32,6 @@ class Router
         // Valores por defecto
         $this->db = \CONFIG['db'];
         $this->controller =  ucfirst($params['controller'] ?? null);
-        $this->action =  strtolower($params['action'] ?? null);
 
         if (strtoupper($_SERVER['REQUEST_METHOD']) === 'POST') $this->isPost($params);
         elseif (strtoupper($_SERVER['REQUEST_METHOD']) === 'GET')  $this->isGet($params['view']);
@@ -40,16 +39,9 @@ class Router
     private function isGet($view)
     {
         // Comprobar si la vista existe 
-        $file =  \FOLDER\VIEWS . $view . '.phtml';
-        if (is_file($file)) {
-            prs('ECISTE');
-        } else {
-            // Si no existe enviamos un error 404
-            $cont = new \core\Controller('404', null ); 
-            $html = $cont->view('404');
-           
-            return $html;
-        }
+        $cls_view = new \controllers\ViewsTemplate($view, $this->data);
+        return $cls_view->print_view($view);
+
         // Comprobar si tiene un controlador
 
         /* if (empty($this->db)) {

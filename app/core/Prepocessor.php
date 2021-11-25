@@ -26,7 +26,7 @@ class Prepocessor
         $content,
         $queueJS = [],
         $loadeds = [],
-        $bc;                       
+        $bc;
 
     function __construct(bool $cacheable = true)
     {
@@ -54,9 +54,11 @@ class Prepocessor
 
         $this->cache_record($this->cache);
     }
-    // Funcion preprocesadora de los archivos
-    // Lee archivos de directorios y los directorios anidados
-    private function show_files(String $path)
+    /**
+     * Funcion preprocesadora de los archivos
+     * Lee archivos de directorios y los directorios anidados
+     */
+    private function show_files(String $path): void
     {
         if (!in_array($path, self::FOLDERS_EXCEPTIONS)) {
             $dir = opendir($path);
@@ -103,7 +105,7 @@ class Prepocessor
         $this->build_js();
 
         if ($file == self::MAIN_PAGE) {
-            $queueCSS = '<link rel="stylesheet" href="'.self::BUNDLE_CSS.'">';
+            $queueCSS = '<link rel="stylesheet" href="' . self::BUNDLE_CSS . '">';
             $this->el->replace('</head>', $queueCSS . '</head>');
             $queueJS = "<script src='" . self::BUNDLE_JS . "'></script>";
             $this->el->replace('</body>', $queueJS . '</body>');
@@ -208,7 +210,7 @@ class Prepocessor
                         $this->el->replace($value, $replace);
                     } else {
                         // Buscamos la segunda condición si existe
-                        
+
                         // Eliminamos todo el condicional 
                         $this->el->replace($value, '');
                     }
@@ -294,7 +296,8 @@ class Prepocessor
     /**
      * Minifica el Less y transforma a css
      */
-    private function less_compiler(String $content) : String{
+    private function less_compiler(String $content): String
+    {
         //COMPILAMOS LESS
         $less = new \lessc;
         return $less->compile($content);
@@ -302,17 +305,17 @@ class Prepocessor
     /**
      * Minifica el css 
      */
-    private function css_minify(String $content): String{
+    private function css_minify(String $content): String
+    {
         // MINIMIFICAMOS
         $minifier = new Minify\CSS;
         $minifier->add($content);
         return $minifier->minify();
-
     }
     /**
      * 
      */
-    private function less(String $content) : self
+    private function less(String $content): self
     {
         //COMPILAMOS LESS
         $less = new \lessc;
@@ -350,7 +353,7 @@ class Prepocessor
     }
     /**
      * Procesa la sintaxis de los elementos @include()
-     */ 
+     */
     private function includes(): self
     {
         if (
@@ -473,7 +476,7 @@ class Prepocessor
             }
         }
     }
-    private function cache_record(array $cache) : bool
+    private function cache_record(array $cache): bool
     {
         if ($this->isModified) {
             $out = '';
@@ -484,7 +487,6 @@ class Prepocessor
             return true;
         } else return false;
     }
-
     /**
      * Resetea el contenido de las carpetas del proyecto 
      */
@@ -506,11 +508,11 @@ class Prepocessor
     /**
      * Minifica, comprime y agrupa el contenido JS 
      */
-    private function listar(string $path) : void
+    private function listar(string $path): void
     {
         $arr_files = [];
         $str_js = '';
-        $str_css = ''; 
+        $str_css = '';
         if ($folder = opendir($path)) {
             while (false !== ($file = readdir($folder))) {
                 // Filtramos directorios padres
@@ -522,17 +524,17 @@ class Prepocessor
             }
             // Ordenamos los archivos para respetar la propiedad de cascada en los estilos
             sort($arr_files);
-            foreach($arr_files as $file){
+            foreach ($arr_files as $file) {
                 // Comprobamos que sea un archivo js 
                 $ex = explode('.', $file);
                 $ext = end($ex);
-                if(isset($ext) ){
-                    if ( $ext === 'js' ) {
+                if (isset($ext)) {
+                    if ($ext === 'js') {
                         if ($this->checkedCompile($path . $file, $path . "{$ext[0]}.min.js")) {
                             $minifier_JS = new Minify\JS($path . $file);
                             $str_js .= $minifier_JS->minify() . ';';
                         }
-                    }elseif( $ext === 'less' || $ext === 'css' ){
+                    } elseif ($ext === 'less' || $ext === 'css') {
                         // Archivos de estilos less
                         $content = file_get_contents($path . $file) or die('No se puede abrir el archivo:' . $file);
                         if ($ext === 'less') $content = $this->less_compiler($content);
@@ -540,7 +542,6 @@ class Prepocessor
                         $str_css .= $compile;
                     }
                 }
-
             }
             // Se crea el archivo único para JS 
             $file_handle = fopen(self::BUNDLE_JS, 'a+');
@@ -550,8 +551,6 @@ class Prepocessor
             $file_handle = fopen(self::BUNDLE_CSS, 'a+');
             fwrite($file_handle, $str_css);
             fclose($file_handle);
-
-
         }
     }
     /**
