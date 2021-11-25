@@ -38,7 +38,7 @@ class ComposerStaticInit9af3f9963c563740eab98ea83558b01a
     public static $prefixDirsPsr4 = array (
         'models\\' => 
         array (
-            0 => __DIR__ . '/../..' . '/app/models',
+            0 => __DIR__ . '/../..' . '/src/models',
         ),
         'libs\\' => 
         array (
@@ -54,7 +54,7 @@ class ComposerStaticInit9af3f9963c563740eab98ea83558b01a
         ),
         'controllers\\' => 
         array (
-            0 => __DIR__ . '/../..' . '/app/controllers',
+            0 => __DIR__ . '/../..' . '/src/controllers',
         ),
         'MatthiasMullie\\PathConverter\\' => 
         array (

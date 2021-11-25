@@ -6,11 +6,11 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'models\\' => array($baseDir . '/app/models'),
+    'models\\' => array($baseDir . '/src/models'),
     'libs\\' => array($baseDir . '/app/libs'),
     'helpers\\' => array($baseDir . '/app/helpers'),
     'core\\' => array($baseDir . '/app/core'),
-    'controllers\\' => array($baseDir . '/app/controllers'),
+    'controllers\\' => array($baseDir . '/src/controllers'),
     'MatthiasMullie\\PathConverter\\' => array($vendorDir . '/matthiasmullie/path-converter/src'),
     'MatthiasMullie\\Minify\\' => array($vendorDir . '/matthiasmullie/minify/src'),
     'Firebase\\JWT\\' => array($vendorDir . '/firebase/php-jwt/src'),

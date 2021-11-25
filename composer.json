@@ -5,10 +5,10 @@
     "autoload": {
         "psr-4": {
             "core\\":"app/core/",
-            "controllers\\":"app/controllers",
             "helpers\\":"app/helpers//",
             "libs\\":"app/libs//",
-            "models\\":"app/models//"
+            "controllers\\":"src/controllers",
+            "models\\":"src/models//"
         }
     },
     "authors": [

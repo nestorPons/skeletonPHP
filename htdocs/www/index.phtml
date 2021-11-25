@@ -25,15 +25,18 @@
         <h1>Skeleton Framework AJAX-PHP</h1>
     </div>
     <div class="leftcolumn">
-        <secction id="main" class="">
-            <h3>Características</h3>
-            <ul>
-                <li>Modular</li>
-                <li>Rápido</li>
-                <li>Altamente reutilizable</li>
-            </ul>
-        </secction>
-        <?php $c = new \core\Component('m-btn', '{"onclick":"app.get(`page2`)"}', 'click me'); $c->print();?>
+        <main>
+            Aquºi se carga todo
+            <section id="main" class="">
+                <h3>Características</h3>
+                <ul>
+                    <li>Modular</li>
+                    <li>Rápido</li>
+                    <li>Altamente reutilizable</li>
+                </ul>
+            </section>
+        </main>
+        <?php $c = new \core\Component('m-btn', '{"onclick":"app.getView(`page12`)"}', 'click me'); $c->print();?>
     </div>
     <div class="rightcolumn">
         <div class="card">
@@ -44,7 +47,7 @@
         <div class="card">
             <h2>About Me</h2>
             <div class="fakeimg" style="height:100px;">Image</div>
-            <p>Some text about me in culpa qui officia deserunt mollit anim..</p>
+            <p>Some text about__construct me in culpa qui officia deserunt mollit anim..</p>
         </div>
     </div>
     <div class="footer">

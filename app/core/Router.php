@@ -35,13 +35,23 @@ class Router
         $this->action =  strtolower($params['action'] ?? null);
 
         if (strtoupper($_SERVER['REQUEST_METHOD']) === 'POST') $this->isPost($params);
-        elseif (strtoupper($_SERVER['REQUEST_METHOD']) === 'GET')  $this->isGet();
+        elseif (strtoupper($_SERVER['REQUEST_METHOD']) === 'GET')  $this->isGet($params['view']);
     }
-    private function isGet()
+    private function isGet($view)
     {
-        $this->loadController($this->controller);
-        var_dump($_GET);
-        exit('Aki');
+        // Comprobar si la vista existe 
+        $file =  \FOLDER\VIEWS . $view . '.phtml';
+        if (is_file($file)) {
+            prs('ECISTE');
+        } else {
+            // Si no existe enviamos un error 404
+            $cont = new \core\Controller('404', null ); 
+            $html = $cont->view('404');
+           
+            return $html;
+        }
+        // Comprobar si tiene un controlador
+
         /* if (empty($this->db)) {
             // Si no encontramos la base datos vamos a la pagina principal
             if (empty($this->controller)) $this->controller = 'main';
@@ -107,12 +117,12 @@ class Router
                 return false;
             }
         }; */
-        $nameClass = 'controllers\\' . $this->controller;
-echo($nameClass);
+        $nameClass = '\\controllers\\' . $this->controller;
+
         $cont = $this->isController($this->controller)
-            ? new $nameClass($this->action, $this->data)
-            : new \core\Controller($this->action, $this->controller, $this->data);
-    
-        return $cont;
+            ? new $nameClass( $this->data )
+            : new \core\Controller( $this->controller, $this->data );
+        
+            return $cont;
     }
 }

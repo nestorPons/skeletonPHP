@@ -8,33 +8,25 @@
  *  Método para añadir/editar/borrar datos a los modelos (abstracto)
  */
 class Controller{
-    protected $conn, $controller, $action, $data, 
+    protected $conn, $controller, $data, 
         // Variable que indica si la zona necesita autentificación
         // Hay que sobreescribirla en los controladores que no necesiten de la restricción
         $restrict = true;
 
     public $result = null;
 
-    function __construct(String $action, $controller = null, $Data = null){
-
+    function __construct($controller = null, $Data = null){
         // Obtenemos el controlador
         $this->controller =strtolower($controller ?? $this->getController());
-        $this->action = strtolower($action);
         $this->Data = $Data; 
 
-        // Constructor alternativo básico
-        $this->result = (method_exists($this, $this->action)) 
-                        ? $this->{$this->action}($Data)
-                        // Si no encuentra el métodod en el controlador los busca en el modelo
-                        : $this->exec ($this->action, '');
-
         }
-    function view($data = null){
+    function view($view, $data = null){
   
         $arr_data = (is_object($data)) ? $data->toArray() : $data;
 
         // Carpetas donde buscar las vistas
-        $files[] = \FOLDER\VIEWS . $this->controller . '.phtml'; 
+        $files[] = \FOLDER\VIEWS . $view . '.phtml'; 
         foreach($files as $file){
             if(file_exists($file)) return $this->printView($file, $arr_data);
         }        

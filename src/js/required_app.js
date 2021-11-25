@@ -59,20 +59,17 @@ const app = {
     //      (true) => carga y muestra componente/seccion además carga inicializador
     //       false => Carga el componente pero no lo muestra
     //  }
-    get( view='index', controller='viewsTemplate', data = {}, load = true, callback ) {
-        console.log(view)
+    getView( view='index', data = {}, load = false, callback ) {
 
         let d = {
-            'view' : view,
-            'controller' : controller, 
+            'view' : view, 
             'data': data
         }
        
         this.ajax('get', d, (html, respond) => {
-            console.log(html)
-
-/*             // Cargamos la seccion en diferentes lugares dependiendo en que zona nos encontramos
+            // Cargamos la seccion en diferentes lugares dependiendo en que zona nos encontramos
             $container = ($('main').length != 0) ? $('main') : $('body');
+            $container.append(html)
             if (load) {
                 $container
                     .find('section').hide().end()
@@ -87,7 +84,7 @@ const app = {
                 $container.append(html);
             }
             typeof callback == 'function' && callback(html);
-*/
+
         }, 'html'); 
 
     },

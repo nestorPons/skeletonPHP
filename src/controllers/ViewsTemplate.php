@@ -1,4 +1,4 @@
-<?php namespace src\controllers; 
+<?php namespace controllers; 
 use \core\{Controller};
 /**
  * Controlador template
@@ -6,7 +6,7 @@ use \core\{Controller};
 class ViewsTemplate extends Controller{
 
     function __construct(){
-        echo('Controlador general de las vistas');
+
     }
 
 }
