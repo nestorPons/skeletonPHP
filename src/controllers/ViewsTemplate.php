@@ -11,45 +11,49 @@ use function PHPSTORM_META\map;
  */
 class ViewsTemplate
 {
-    const FOLDERS_VIEW = \FOLDER\VIEWS;
-    private $page, $data;
+    const 
+        FOLDERS_VIEW = \FOLDER\PUBLIC_FOLDER,
+        MAIN_PAGE = \FOLDER\PUBLIC_FOLDER . \CONFIG['main'];
+    private $page, $data ;
 
 
     function __construct($page, $data = null)
     {
-        // Comprobamos que la vista existe
+        $this->page = $page ?? \CONFIG['main'];
         $this->data = new \core\Data($data);
-        prs($data);
         $this->check_page($page);
-       
-    }
-    function check_page($page){
-        $file =  self::FOLDERS_VIEW . $page . '.phtml';
-        if (file_exists($file)) {
-            $html = $this->print_view($page);
-            $this->page = $page;
-            prs('ECISTE');
-        } else {
-            // Si no existe enviamos un error 404 
-            $html = $this->print_view('404');
-           
-            return $html;
+
+        //$this->data->addItem('123','value');
+        $is_empty = $this->data->isEmpty();
+
+        // Comprobamos si envia datos 
+        if (!$is_empty) {
+            prs($this->data);
         }
     }
-    function print_view($page)
+    /**
+     * Comprueva la existencia de la vista
+     * Carga la variable privada $page añadiendo la extensión
+     */
+    function check_page(): bool
+    {
+        $result = true;
+        $file =  self::FOLDERS_VIEW . $this->page . '.phtml';
+
+        if (!file_exists($file)) {
+            $this->page = '404';
+            $result = False;
+        }
+        $this->page = $this->page . '.phtml';
+        return $result;
+    }
+    /**
+     * 
+     */
+    function print_view(): void
     {
         // Preprocesar la vista con los datos que se le mandand
-        $arr_data = (is_object($this->data)) ? $this->data->toArray() : $this-_>data;
-
-        // Si tengo datos preproceso si no noç
-        if($arr_data){
-            echo('Contiene datos');
-        } else {
-            echo ('No contiene datos');
-        }
-        return $arr_data;
-
+        $arr_data = (is_object($this->data)) ? $this->data->toArray() : $this->data;
+        include (self::FOLDERS_VIEW . $this->page);
     }
-
-
 }

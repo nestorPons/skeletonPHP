@@ -26,7 +26,7 @@ class Router
         $action;
 
     function __construct($params)
-    {
+    {   
         $this->data = new Data;
 
         // Valores por defecto
@@ -34,13 +34,13 @@ class Router
         $this->controller =  ucfirst($params['controller'] ?? null);
 
         if (strtoupper($_SERVER['REQUEST_METHOD']) === 'POST') $this->isPost($params);
-        elseif (strtoupper($_SERVER['REQUEST_METHOD']) === 'GET')  $this->isGet($params['view']);
+        elseif (strtoupper($_SERVER['REQUEST_METHOD']) === 'GET')  $this->isGet( $param['view'] ?? null );
     }
     private function isGet($view)
     {
-        // Comprobar si la vista existe 
+
         $cls_view = new \controllers\ViewsTemplate($view, $this->data);
-        return $cls_view->print_view($view);
+        return $cls_view->print_view();
 
         // Comprobar si tiene un controlador
 

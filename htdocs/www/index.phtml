@@ -18,7 +18,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 
     <title>Skeleton Framework</title>
-<link rel="stylesheet" href="www/bundle.css"></head>
+</head>
 
 <body>
     <div class="header">
@@ -38,7 +38,7 @@
         </main>
         <?php $c = new \core\Component('m-btn', '{"onclick":"app.getView(`page12`)"}', 'click me Error'); $c->print();?>
 
-        <?php $c = new \core\Component('m-btn', '{"onclick":"app.getView(`page2,{`data` : `un dato` }`)"}', 'click me'); $c->print();?>
+        <?php $c = new \core\Component('m-btn', '{"onclick":"app.getView(`page2`)"}', 'click me'); $c->print();?>
     </div>
     <div class="rightcolumn">
         <div class="card">
@@ -55,6 +55,6 @@
     <div class="footer">
         <a href="https://nestorpons.github.io/skeletonPHP/site/">Manual SkeletonPHP</a>
     </div>
-<script src='www/bundle.js'></script></body>
+</body>
 
 </html>

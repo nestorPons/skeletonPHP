@@ -39,8 +39,6 @@ class Prepocessor
         $this->cache = (file_exists(self::CACHE_FILE)) ? parse_ini_file(self::CACHE_FILE) : [];
 
         // Reseteamos los archivos de construccion
-        if (file_exists(self::BUNDLE_CSS)) unlink(self::BUNDLE_CSS);
-        if (file_exists(self::BUNDLE_JS)) unlink(self::BUNDLE_JS);
         if (!file_exists(self::BUILD)) mkdir(self::BUILD, 0775, true);
 
         // Compilamos los archivos js
