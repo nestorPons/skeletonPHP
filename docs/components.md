@@ -1,12 +1,11 @@
 # Componentes Skeleton
 
-### Descripción
-Los componentes son trozos de codigo independientes que generan un objeto html con características singulares.
-Son objetos encapsulados con una estructura HTML , un diseño CSS, y un comportamiento con JS. 
-Ayudan a crear aplicaciones más fáciles de diseñar y mantener.
-Son fácilmente reutilizables, minimizan y homogenizan todo muestro código. 
+Los componentes son trozos de código independientes que generan un objeto html con características singulares.  
+Son objetos encapsulados con una estructura HTML , un diseño CSS, y un comportamiento con JS.  
+Ayudan a crear aplicaciones más fáciles de diseñar y mantener.  
+Son fácilmente reutilizables, minimizan y homogenizan todo muestro código.  
 
-Para un mayor dinamismo cuenta con distintas tecnologías para darle mayor funcionalidad: 
+Para un mayor dinamismo cuenta con distintas tecnologías para darle mayor funcionalidad:  
 
 ![ESQUEMA](img/Sistemacomponentes.png "Esquema del SkeletonPHP")
 
