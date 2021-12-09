@@ -10,6 +10,16 @@ Para un mayor dinamismo cuenta con distintas tecnologías para darle mayor funci
 
 ![ESQUEMA](img/Sistemacomponentes.png "Esquema del SkeletonPHP")
 
+### Component 
+    La forma de crearlo es en un archivo con el nombre del componente que se desea.
+    Se debe iniciar y acabar con el pseudo-tag component <code>&lt;component id=""&gt;Codigo...&lt;/component&gt;</code>. 
+    Dentro de el incluiremos la estructura html, js y css si se desea, y será precompilada con las directivas Bone. 
+
+    Podemos encapsularle unos estilos propios mediante el tag <code>&lt;style lang="" scoped&gt;&lt;style&gt;</code> con el atributo lang se declarará el sublenguaje que se esté empleando: Lesscss, Sass etc..
+    Para añadir la funcionalidad al componente se declara la etiqueta &lt;script scope&gt;&lt;script&gt;
+
+    Los atributos que se le pasan al componente a su llamada se declaran como variables Bone. 
+
 ### Ejemplo botón
 Ejemplo de un componente botón:  
 ``<m-btn onclick="alert(`Hay que poner estas comillas para que lo reconozca`)"></m-btn>``
