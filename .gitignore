@@ -1,4 +1,5 @@
 .env
-vendor
+vendor/
 htdocs/www
-site
+site/
+composer.lock

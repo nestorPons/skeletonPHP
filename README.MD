@@ -19,7 +19,7 @@ El proyecto dispone de un servidor LAMP Docker para pruebas de desarroyo:
 
 ## Manual de usurio 
 Consulte nuestro manual de usuario:  
-![Manual](https://nestorpons.github.io/skeletonPHP/)
+[Manual](https://nestorpons.github.io/skeletonPHP/)
 
 ## Configuración 
 Puede configurar la aplicación en:  
