@@ -1,4 +1,4 @@
 .env
 vendor/
-htdocs/www/
+htdocs/www/*.*
 site/
