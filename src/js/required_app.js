@@ -1,48 +1,55 @@
+
+  
+    window.onbeforeunload = function (e) {
+alert(e)
+        return false;
+    };
+
 const app = {
-    ver : '2.2',
+    ver: '2.2',
     timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
     GET: $_GET,
-    // Peticiones con datos 
-    post(data, callback, error = true) {
-        // Si esta cargado el navbar poner el spinner en cada petición
-        if (typeof navbar != 'undefined') navbar.spinner.show(data.controller);
+    // Peticiones con datos
+    post(data, callback, error = true) { // Si esta cargado el navbar poner el spinner en cada petición
+        if (typeof navbar != 'undefined') 
+            navbar.spinner.show(data.controller);
+        
         if (typeof data.controller === 'undefined') {
-            this.mens.error({ success: false, error: 'No se ha asignado  controlador' })
+            this.mens.error({success: false, error: 'No se ha asignado  controlador'})
             return false;
         }
-        if (typeof data.db === 'undefined') data.db = $_GET['db'];
+        if (typeof data.db === 'undefined') 
+            data.db = $_GET['db'];
+        
 
         this.ajax('post', data, (respond, status, xhr, dataType) => {
-            if (typeof navbar != 'undefined') navbar.spinner.hide(data.controller);
+            if (typeof navbar != 'undefined') 
+                navbar.spinner.hide(data.controller);
+            
             let d = null;
-            // La respuesta puede ser json o html 
-            try {
-                // comprobamos si es json
+            // La respuesta puede ser json o html
+            try { // comprobamos si es json
                 d = JSON.parse(respond);
                 // la respuesta es JSON
                 console.log(d);
 
-                // Imprimimos mensaje de error si lo hay 
-                if (error)
-                    if ((isEmpty(d.success) ||
-                        d.success == false ||
-                        d.success == 0) &&
-                        exist(d.mens)) 
-                    {
+                // Imprimimos mensaje de error si lo hay
+                if (error) 
+                    if ((isEmpty(d.success) || d.success == false || d.success == 0) && exist(d.mens)) {
                         console.log('Error en la respuesta!!');
                         this.mens.error(d.mens || 'No se ha podido rehalizar la petición!');
                         return false;
                     }
-            } catch (e) {
-                // la respuesta es HTML
+                
+            } catch (e) { // la respuesta es HTML
                 html = $(respond);
-                this.sections.toggle(html.attr('id'), _=>{
+                this.sections.toggle(html.attr('id'), _ => {
 
                     html.appendTo('body');
-                    html.find('section').each((i, el) =>{
+                    html.find('section').each((i, el) => {
                         this.sections.loaded.push(el.id);
                     })
-                    
+
                 })
             } finally {
                 let resp = d ? d.data : null,
@@ -51,47 +58,41 @@ const app = {
             }
         });
     },
-    // Carga de zonas por método get
-    // controller
-    // La acción se sobreentiende por el tipo de petición GET
-    // data => { data : ....}
-    // load => {
-    //      (true) => carga y muestra componente/seccion además carga inicializador
-    //       false => Carga el componente pero no lo muestra
-    //  }
-    getView( view='index', data = {}, load = false, callback ) {
-
+    /**
+     * Carga de las vistas
+     * @param {String} view 
+     * @param {JSON} data datos que se mandan a la vista
+     * @param {Bool} load Si refresca o no el contenedor
+     * @param {String} container Componente/id/clase donde se carga la vista
+     * @param {function} callback 
+     */
+    getView(view = 'index', data = {}, load = false, container = 'main', callback) {
         let d = {
-            'view' : view, 
+            'view': view,
             'data': data
         }
-       console.log(data)
-        this.ajax('get', d, (html, respond) => {
-            // Cargamos la seccion en diferentes lugares dependiendo en que zona nos encontramos
-            $container = ($('main').length != 0) ? $('main') : $('body');
-            $container.append(html)
+        this.ajax('get', d, (html, respond) => { 
+ 
             if (load) {
-                $container
-                    .find('section').hide().end()
-                    .append(html);
+                $(container).find('section').hide().end().append(html);
                 // Inicializamos el método inicializador del objeto
-                if (app[controller] != undefined)
-                {
-                    if (exist(app[controller].load)) app[controller].load();
+                if (app[view] != undefined) {
+                    if (exist(app[view].load)) 
+                        app[view].load();
                 }
-                this.sections.inicialize(controller);
+                this.sections.inicialize(view);
             } else {
-                $container.append(html);
+                $(container).append(html);
             }
             typeof callback == 'function' && callback(html);
-
-        }, 'html'); 
+        }, 'html');
 
     },
     ajax(type, data, callback, dataType) {
-        const
-            jwt = sessionStorage.getItem('jwt'),
-            my_header = (jwt) ? { jwt: jwt } : {};
+        const jwt = sessionStorage.getItem('jwt'),
+            my_header = (jwt) ? {
+                jwt: jwt
+            } : {};
 
         $.ajax({
             url: 'index.php',
@@ -115,7 +116,9 @@ const app = {
         document.querySelector("body").appendChild(s);
     },
     loadAsync(src, callback) {
-        if (callback === void 0) { callback = null; }
+        if (callback === void 0) {
+            callback = null;
+        }
         var script = document.createElement('script');
         script.src = src;
         if (callback !== null) {
@@ -126,8 +129,7 @@ const app = {
                         typeof callback == "function" && callback();
                     }
                 };
-            }
-            else {
+            } else {
                 script.onload = function () {
                     typeof callback == "function" && callback();
                 };
@@ -154,36 +156,37 @@ const app = {
     sections: {
         active: null,
         last: null,
-        loaded : [],
+        loaded: [],
         toggle(section, callback) {
-            if ($('section#' + section).is(':visible')) return false;
+            if ($('section#' + section).is(':visible')) 
+                return false;
+            
 
             let $mainSection = $('section');
-            
+
             if ($('#appadmin').length || $('#appuser').length) {
                 $mainSection = $('section').find('section');
             };
 
             $mainSection.fadeOut('fast');
             $('section#' + section).fadeIn();
-            if(typeof callback === 'function') callback();
+            if (typeof callback === 'function') 
+                callback();
+            
             this.inicialize(section);
         },
         show(section, callback) {
             this.last = this.active;
-            // Comprueba que  la seccion existe o no 
+            // Comprueba que  la seccion existe o no
 
-            if (this.loaded.indexOf(section) != -1) {
-                // Si existe oculta todas menos la solicitada
+            if (this.loaded.indexOf(section) != -1) { // Si existe oculta todas menos la solicitada
                 app.sections.toggle(section);
                 typeof callback == 'function' && callback();
-            } else {
-                // Manda una petición para la nueva vista
+            } else { // Manda una petición para la nueva vista
                 app.get({
                     controller: section,
                     action: 'view'
-                }, true, fn => {
-                    // Registramos la sección
+                }, true, fn => { // Registramos la sección
                     this.loaded.push(section);
                     // Activa el evento de inicialización de la sección
                     app.sections.toggle(section);
@@ -193,26 +196,25 @@ const app = {
             }
             this.exit();
         },
-        // Comportamiento de la sección activa al cargarse 
+        // Comportamiento de la sección activa al cargarse
         inicialize(section) {
 
-            if (section == 'appadmin') section = 'tpv';
-            this.active = section;
+            if (section == 'appadmin') 
+                section = 'tpv';
             
+            this.active = section;
+
             let activeZone = app[this.active];
-                 
-            if (activeZone) {
-                // Cargamos los botones de herramientas
-                typeof activeZone.buttons != 'undefined' &&
-                    typeof activeZone.buttons == 'object' &&
-                    menu.show(activeZone.buttons);
-                // Se cargan 
-                typeof activeZone.open != 'undefined' &&
-                    typeof activeZone.open == 'function' &&
-                    activeZone.open();
+
+            if (activeZone) { // Cargamos los botones de herramientas
+                typeof activeZone.buttons != 'undefined' && typeof activeZone.buttons == 'object' && menu.show(activeZone.buttons);
+                // Se cargan
+                typeof activeZone.open != 'undefined' && typeof activeZone.open == 'function' && activeZone.open();
 
                 // Carga del título de la sección
-                if (menu.tile) menu.tile.textContent = activeZone.name; 
+                if (menu.tile) 
+                    menu.tile.textContent = activeZone.name;
+                
 
             }
         },
@@ -235,9 +237,7 @@ const app = {
         filter() {
             typeof app[this.active].filter == 'function' && app[this.active].filter();
         },
-        search() {
-
-        },
+        search() {},
         exit() {
             if (app[this.last] != undefined && typeof app[this.last].exit == 'function') {
                 app[this.last].exit(f => {
@@ -246,12 +246,12 @@ const app = {
             }
         }
     },
-    form: {
-        // Verificamo y si es erroneo nos muestra un mensaje con el atributo tile-error o un mensaje por defecto
+    form: { // Verificamo y si es erroneo nos muestra un mensaje con el atributo tile-error o un mensaje por defecto
         verify($this) {
             let type = $this.get(0).tagName,
                 _verify = function ($this) {
-                    let mens = '', r = true;
+                    let mens = '',
+                        r = true;
                     if ($('#' + $this.attr('for')).val() != $this.val()) {
                         mens = $this.attr('tile-error') || "¡Los campos no coinciden!";
                         r = false;
@@ -261,7 +261,8 @@ const app = {
                     return r;
                 }
             switch (type) {
-                case 'INPUT': return _verify($this);
+                case 'INPUT':
+                    return _verify($this);
                 case 'FORM':
                     // Vrerificamos si es un formulario
                     let success = true;
@@ -278,14 +279,14 @@ const app = {
     formToObject(form) {
         let obj = {};
         let elements = form.querySelectorAll("input, select, textarea");
-        for (let i = 0; i < elements.length; ++i) {
+        for (let i = 0; i < elements.length; ++ i) {
             var element = elements[i],
                 name = element.name,
-                value = (element.type == 'checkbox' || element.type == 'radio')
-                    ? ((element.checked) ? element.value : element.getAttribute('default') || 0)
-                    : element.value;
+                value = (element.type == 'checkbox' || element.type == 'radio') ? ((element.checked) ? element.value : element.getAttribute('default') || 0) : element.value;
 
-            if (name) obj[name] = value;
+            if (name) 
+                obj[name] = value;
+            
         }
         return obj;
     },
@@ -299,31 +300,38 @@ const app = {
         segundo = momentoActual.getSeconds();
 
         str_segundo = new String(segundo);
-        if (str_segundo.length == 1)
+        if (str_segundo.length == 1) 
             segundo = "0" + segundo;
+        
 
         str_minuto = new String(minuto);
-        if (str_minuto.length == 1)
+        if (str_minuto.length == 1) 
             minuto = "0" + minuto;
+        
 
         str_hora = new String(hora);
-        if (str_hora.length == 1)
+        if (str_hora.length == 1) 
             hora = "0" + hora;
+        
 
         horaImprimible = hora + " : " + minuto;
 
         $('.clock').val(horaImprimible);
 
-        //setTimeout("app.clock()",1000) 
+        // setTimeout("app.clock()",1000)
     },
     loadDataToForm(data, form) {
-        if (data == undefined) return false;
+        if (data == undefined) 
+            return false;
+        
         var els = form.getElementsByTagName('input');
         for (const el of els) {
             if (el.attributes != undefined && el.hasAttribute('name')) {
                 if (el.type == 'checkbox') {
                     el.checked = data[el.attributes.name.value] > el.getAttribute('default');
-                } else el.value = data[el.attributes.name.value];
+                } else 
+                    el.value = data[el.attributes.name.value];
+                
             }
         }
         els = form.getElementsByTagName('select');
@@ -339,19 +347,20 @@ const app = {
     help() {
         this.mens.info(`
             TPVOnline 
-            v.${this.ver}
+            v.${
+            this.ver
+        }
             Autor : Néstor Pons Portolés
             Email : nestorpons@gmail.com
             Licencia : MIT 2019
         `);
     },
-    close() {
-        // Eliminamos las zonas abiertas
+    close() { // Eliminamos las zonas abiertas
         $('section:not("#login")').hide().remove();
         $('section#login').show();
         // Quitamos token de autentificación
         sessionStorage.removeItem('jwt');
-        // Eliminamos la base de datos 
+        // Eliminamos la base de datos
         DB.remove();
     }
 }
@@ -360,45 +369,44 @@ const DB = {
     current: 0,
     table: null,
     key(table, key, value) {
-        this.get(table)
-            .then(d => {
-
-            });
+        this.get(table).then(d => {});
     },
     // Consultar datos de la bd local
     get(table = this.table, key, value, filter) {
         return new Promise((resolve, reject) => {
             const _equalValues = function (el) {
-                const
-                    k = (typeof el[key] === 'string') ? el[key].toLowerCase().trim() : el[key],
+                const k = (typeof el[key] === 'string') ? el[key].toLowerCase().trim() : el[key],
                     v = (typeof value === 'string') ? value.toLowerCase().trim() : value;
 
-                if (k) return typeof k === 'number' ? k == v : k.includes(v);
-                else return false;
+                if (k) 
+                    return typeof k === 'number' ? k == v : k.includes(v);
+                 else 
+                    return false;
+                
             }
-            if (table == undefined) {
-                // Si no le paso un indice me devuelve todos los nombres de tablas
+            if (table == undefined) { // Si no le paso un indice me devuelve todos los nombres de tablas
                 resolve(this.storage);
-            } else {
-                // Si no se pasan key o value devolvemos todos los registros            
-                if ((key == undefined || value == undefined) && filter == undefined) resolve(this.storage[table]);
-                else resolve(this.storage[table].filter(el => {
-                    if (filter) {
-                        if (filter.indexOf('==') != -1) {
-                            let arr = filter.split('==');
-                            return _equalValues(el) && el[arr[0].trim()] == arr[1].trim();
-                        }
-                        else if (filter.indexOf('>') != -1) {
-                            let arr = filter.split('>');
-                            return _equalValues(el) && el[arr[0].trim()] > arr[1].trim();
-                        }
-                        else if (filter.indexOf('<') != -1) {
-                            let arr = filter.split('<');
-                            return _equalValues(el) && el[arr[0].trim()] < arr[1].trim();
-                        };
-                    }
-                    else return _equalValues(el);
-                })) || reject(false);
+            } else { // Si no se pasan key o value devolvemos todos los registros
+                if ((key == undefined || value == undefined) && filter == undefined) 
+                    resolve(this.storage[table]);
+                 else 
+                    resolve(this.storage[table].filter(el => {
+                        if (filter) {
+                            if (filter.indexOf('==') != -1) {
+                                let arr = filter.split('==');
+                                return _equalValues(el) && el[arr[0].trim()] == arr[1].trim();
+                            } else if (filter.indexOf('>') != -1) {
+                                let arr = filter.split('>');
+                                return _equalValues(el) && el[arr[0].trim()] > arr[1].trim();
+                            } else if (filter.indexOf('<') != -1) {
+                                let arr = filter.split('<');
+                                return _equalValues(el) && el[arr[0].trim()] < arr[1].trim();
+                            };
+                        } else 
+                            return _equalValues(el);
+                        
+                    })) || reject(false);
+                
             };
         });
     },
@@ -409,13 +417,15 @@ const DB = {
                 let i = this.storage[table].findIndex(el => {
                     return el[key] == value;
                 })
-                if (i == -1)
+                if (i == -1) 
                     this.storage[table].push(data);
-                else
+                 else 
                     this.storage[table][i] = data;
-            } else {
-                //inicializa
-                if (typeof this.storage[table] == 'undefined') this.storage[table] = [];
+                
+            } else { // inicializa
+                if (typeof this.storage[table] == 'undefined') 
+                    this.storage[table] = [];
+                
                 // Guarda datos en formato array
                 for (let i in data) {
                     this.storage[table].push(data[i]);
@@ -442,15 +452,18 @@ const DB = {
     },
     async next(table = this.table, id) {
         let last = null;
-        const
-            data = await this.get(table);
+        const data = await this.get(table);
         // Recorremos el array al revés
         for (let i = data.length - 1; i >= 0; i--) {
             const d = data[i];
             if (d) {
-                if (d.id == id) return last;
+                if (d.id == id) 
+                    return last;
+                
                 last = d;
-            } else return false;
+            } else 
+                return false;
+            
         }
         return false;
     },
@@ -460,7 +473,9 @@ const DB = {
 
         for (const i in data) {
             const d = data[i];
-            if (d.id == id) return last;
+            if (d.id == id) 
+                return last;
+            
             last = d;
         }
         return false;
@@ -470,22 +485,24 @@ const DB = {
     },
     post(controller, action, data) {
 
-        return new Promise((resolve, reject) => {
-            // Guardamos en remoto
+        return new Promise((resolve, reject) => { // Guardamos en remoto
             app.post({
                 controller: controller,
                 action: action,
                 data: data
-            }, (d, r) => {
-                // Carga de la base de datos en local
+            }, (d, r) => { // Carga de la base de datos en local
                 if (r) {
                     if (this.exist(controller)) {
-                        const c = { ...data, ...d };
+                        const c = {
+                            ...data,
+                            ...d
+                        };
                         this.set(controller, c, 'id', c.id);
                     }
                     resolve(d);
-                }
-                else reject(d);
+                } else 
+                    reject(d);
+                
             })
         })
     },
@@ -503,7 +520,9 @@ const date = {
     },
     actual() {
         let f = new Date();
-        return (f.getDate() + "/" + (f.getMonth() + 1) + "/" + f.getFullYear());
+        return(f.getDate() + "/" + (
+            f.getMonth() + 1
+        ) + "/" + f.getFullYear());
     },
     now(arg = '') {
         let f = new Date(),
@@ -529,13 +548,18 @@ const date = {
     },
     format(date, format) {
         if (date) {
-            let d, m, a, h, n, s;
+            let d,
+                m,
+                a,
+                h,
+                n,
+                s;
             if (typeof date === 'string') {
                 let f = date.split(' '),
                     fecha = f[0],
                     horario = f[1];
 
-                // Si tiene horas ... 
+                // Si tiene horas ...
                 if (horario) {
                     let x = horario.split(':');
                     h = x[0].padStart(2, '0');
@@ -568,39 +592,65 @@ const date = {
                 h = date.getHours().toString().padStart(2, '0');
                 n = date.getMinutes().toString().padStart(2, '0');
                 s = date.getSeconds().toString().padStart(2, '0');
-            } else return false;
+            } else 
+                return false;
+            
             switch (format) {
-                case 'sql': return a + '-' + m + '-' + d;
-                case 'datetime': return a + '-' + m + '-' + d + ' ' + h + ':' + min + ':' + s;
-                case 'short': return d + '/' + m + '/' + a;
-                case 'print': return d + '/' + m + '/' + a + ' ' + h + ':' + min + ':' + s;
-                case 'md': return m + d;
-                case 'id': return a + m + d;
-                case 'day': return d;
-                case 'month': return m;
-                case 'year': return a;
-                case 'hour': return h + ':' + min || false;
+                case 'sql':
+                    return a + '-' + m + '-' + d;
+                case 'datetime':
+                    return a + '-' + m + '-' + d + ' ' + h + ':' + min + ':' + s;
+                case 'short':
+                    return d + '/' + m + '/' + a;
+                case 'print':
+                    return d + '/' + m + '/' + a + ' ' + h + ':' + min + ':' + s;
+                case 'md':
+                    return m + d;
+                case 'id':
+                    return a + m + d;
+                case 'day':
+                    return d;
+                case 'month':
+                    return m;
+                case 'year':
+                    return a;
+                case 'hour':
+                    return h + ':' + min || false;
                 case 'long':
                     let month = '';
                     switch (m) {
-                        case '1': month = 'Enero'; break;
-                        case '2': month = 'Febrero'; break;
-                        case '3': month = 'Marzo'; break;
-                        case '4': month = 'Abril'; break;
-                        case '5': month = 'Mayo'; break;
-                        case '6': month = 'Junio'; break;
-                        case '7': month = 'Julio'; break;
-                        case '8': month = 'Agosto'; break;
-                        case '9': month = 'Septiembre'; break;
-                        case '10': month = 'Octubre'; break;
-                        case '11': month = 'Noviembre'; break;
-                        case '12': month = 'Diciembre'; break;
+                        case '1': month = 'Enero';
+                            break;
+                        case '2': month = 'Febrero';
+                            break;
+                        case '3': month = 'Marzo';
+                            break;
+                        case '4': month = 'Abril';
+                            break;
+                        case '5': month = 'Mayo';
+                            break;
+                        case '6': month = 'Junio';
+                            break;
+                        case '7': month = 'Julio';
+                            break;
+                        case '8': month = 'Agosto';
+                            break;
+                        case '9': month = 'Septiembre';
+                            break;
+                        case '10': month = 'Octubre';
+                            break;
+                        case '11': month = 'Noviembre';
+                            break;
+                        case '12': month = 'Diciembre';
+                            break;
                     }
                     return `${d} de ${month} del ${a}`;
 
-                default: return new Date(a, m - 1, d, h, min, s);
+                default:
+                    return new Date(a, m - 1, d, h, min, s);
             }
-        } return null;
+        }
+        return null;
     },
     diff(f1, f2) {
 
@@ -608,7 +658,7 @@ const date = {
             d2 = new Date(this.format(f2, 'sql')).getTime(),
             diff = d2 - d1;
 
-        return (diff / (1000 * 60 * 60 * 24));
+        return(diff / (1000 * 60 * 60 * 24));
     },
     add(argdate, value = 1, unity = 'days', format = null) {
 
@@ -616,17 +666,17 @@ const date = {
         const v = parseInt(value);
 
         switch (unity) {
-            case 'days':
-                date.setDate(date.getDate() + v);
+            case 'days': date.setDate(date.getDate() + v);
                 break;
-            case 'month':
-                date.setMonth(date.getMonth() + v);
+            case 'month': date.setMonth(date.getMonth() + v);
                 break;
-            case 'year':
-                date.setFullYear(date.getFullYear() + v);
+            case 'year': date.setFullYear(date.getFullYear() + v);
         }
-        if (format) return this.format(date, format);
-        else return date;
+        if (format) 
+            return this.format(date, format);
+         else 
+            return date;
+        
     },
     sql(param = this.date) {
         return this.format(param, 'sql');
@@ -639,5 +689,5 @@ const date = {
     },
     datetime(param = this.date) {
         return this.format(param, 'datetime');
-    }   
+    }
 }

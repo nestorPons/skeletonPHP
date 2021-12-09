@@ -22,39 +22,24 @@
 
 <body>
     <div class="header">
-        <h1>Skeleton Framework AJAX-PHP</h1>
+        <h1 class="elegantshadow">Skeleton</h1>
+        <dd>
+            <em>Framework PHP</em><br>
+            <em>Página creada con Skeleton y su lenguaje de plantillas Bone</em>
+</dd>
+    <hr><hr>
     </div>
-    <div class="leftcolumn">
-        <main>
-            Aquºi se carga todo
-            <section id="main" class="">
-                <h3>Características</h3>
-                <ul>
-                    <li>Modular</li>
-                    <li>Rápido</li>
-                    <li>Altamente reutilizable</li>
-                </ul>
-            </section>
-        </main>
-        <?php $c = new \core\Component('m-btn', '{"onclick":"app.getView(`page12`)"}', 'click me Error'); $c->print();?>
-
-        <?php $c = new \core\Component('m-btn', '{"onclick":"app.getView(`page2,{`data` : `un dato` }`)"}', 'click me'); $c->print();?>
+    <div>
+        Reutilizables, minimizan y homogenizan todo muestro código. <br>
+        Así son los objetos de Skeleton. <br>
+        <a href="https://nestorpons.github.io/skeletonPHP/site/">Consulta el manual</a><br>
+        <a href="https://github.com/nestorPons/skeletonPHP">Vista el proyecto en Github</a><br>
     </div>
-    <div class="rightcolumn">
-        <div class="card">
-            <h2>Componentes tipo botón</h2>
-            <?php $c = new \core\Component('m-btn-success', '{"label":"Pulsame","onclick":"alert(`\u00a1Esto es un ejemplo de un componente en acci\u00f3n!`)"}', 'null'); $c->print();?>
-            <?php $c = new \core\Component('m-btn-cancel', '{"label":"Pulsame","onclick":"alert(`\u00a1Esto es un componente hermano!`)"}', 'null'); $c->print();?>
-        </div>
-        <div class="card">
-            <h2>About Me</h2>
-            <div class="fakeimg" style="height:100px;">Image</div>
-            <p>Some text about__construct me in culpa qui officia deserunt mollit anim..</p>
-        </div>
-    </div>
-    <div class="footer">
-        <a href="https://nestorpons.github.io/skeletonPHP/site/">Manual SkeletonPHP</a>
-    </div>
+    <main>
+                <hr>
+                <hr>
+        <?php include('www/components.phtml')?>
+    </main>
 <script src='www/bundle.js'></script></body>
 
 </html>

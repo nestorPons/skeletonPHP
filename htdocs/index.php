@@ -55,6 +55,5 @@ if( CONFIG['develop'] ){
 // Si es primera carga (No contiene ningina petición por parametros) 
 // incluye la pagina principal
 
-if(!$_REQUEST) include(\FOLDER\PUBLIC_FOLDER . \CONFIG['main']);
 // Caso contrario se devuelve un objeto enrutado
-else new Router($_REQUEST);
+new Router($_REQUEST);

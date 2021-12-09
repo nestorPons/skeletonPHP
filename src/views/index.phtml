@@ -22,39 +22,27 @@
 
 <body>
     <div class="header">
-        <h1>Skeleton Framework AJAX-PHP</h1>
+        <h1 class="elegantshadow">Skeleton</h1>
+        <dd>
+            <em>Framework PHP</em><br>
+            <em>Página creada con Skeleton y su lenguaje de plantillas Bone</em>
+</dd>
+    <hr><hr>
     </div>
-    <div class="leftcolumn">
-        <main>
-            Aquºi se carga todo
-            <section id="main" class="">
-                <h3>Características</h3>
-                <ul>
-                    <li>Modular</li>
-                    <li>Rápido</li>
-                    <li>Altamente reutilizable</li>
-                </ul>
-            </section>
-        </main>
-        <m-btn onclick="app.getView(`page12`)">click me Error</m-btn>
-
-        <m-btn onclick="app.getView(`page2,{`data` : `un dato` }`)">click me</m-btn>
+    <div>
+        Todo son objetos con las directivas Bone. 
+        Los objetos Skeleton son reutilizables, minimizan y homogenizan todo muestro código. <br>
+        Bone es el sublenguaje php que limpia y dinamiza el codigo html. <br>
+        <a href="https://nestorpons.github.io/skeletonPHP/site/">Consulta el manual</a><br>
+        <a href="https://github.com/nestorPons/skeletonPHP">Vista el proyecto en Github</a><br>
     </div>
-    <div class="rightcolumn">
-        <div class="card">
-            <h2>Componentes tipo botón</h2>
-            <m-btn-success label="Pulsame" onclick="alert(`¡Esto es un ejemplo de un componente en acción!`)"></m-btn-success>
-            <m-btn-cancel label="Pulsame" onclick="alert(`¡Esto es un componente hermano!`)"></m-btn-cancel>
-        </div>
-        <div class="card">
-            <h2>About Me</h2>
-            <div class="fakeimg" style="height:100px;">Image</div>
-            <p>Some text about__construct me in culpa qui officia deserunt mollit anim..</p>
-        </div>
-    </div>
-    <div class="footer">
-        <a href="https://nestorpons.github.io/skeletonPHP/site/">Manual SkeletonPHP</a>
-    </div>
+    <main>
+        //@include(bone.phtml)
+        <hr>
+        //@include(get.phtml)
+        <hr>
+        @include(components.phtml)
+    </main>
 </body>
 
 </html>

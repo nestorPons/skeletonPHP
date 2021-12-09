@@ -237,4 +237,5 @@ class Component extends Tag
         }
         return $this;
     }
+    
 }

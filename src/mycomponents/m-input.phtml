@@ -1,9 +1,10 @@
 <component id="--id" class="row $$hidden" >  
+    <label for="--id_input" class="$$classLabel">$$label</label>
     <input 
         id ="--id_input"
         type = "$$type" 
-        class="$$class" placeholder="$$placeholder"
-        style = "$$style" name = "$$name" tile = "$$tile"
+        class="$$class" placeholder="$$placeholder" 
+        style="$$style" name = "$$name" tile = "$$tile"
         pattern = "$$pattern"
         @if ($$for) for = "$$for" @endif 
         @if ($$maxlength) maxlength = "$$maxlength" @endif
@@ -14,7 +15,6 @@
         onkeypress = "$$onkeypress" onkeydown = "$$onkeydown" onkeyup = "$$onkeyup"
         onchange = "$$onchange" $$required $$disabled readonly="$$readonly" $$checked  
     />
-    <label for="--id_input" class="$$classLabel">$$label</label>
     @if ($$icon) <i id="icon$$id" class="lnr lnr-$$icon"></i> @endif
     <style lang="less" scoped>
         label {

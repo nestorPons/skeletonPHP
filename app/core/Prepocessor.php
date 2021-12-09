@@ -11,12 +11,13 @@ class Prepocessor
     // Constantes globales de las rutas de la aplicación 
     // (app/config/routes.php)
     const
+        INCLUDE_ASSETS = \CONFIG['include_assets'], // Incrusta el js y css en la entrada principal
+        MAIN_PAGE = \FOLDER\VIEWS . \CONFIG['main'],
         BUNDLE_CSS =  \FILE\BUNDLE_CSS,
         BUNDLE_JS =  \FILE\BUNDLE_JS,
-        BUILD = \FOLDER\PUBLIC_FOLDER,
+        PUBLIC_FOLDER = \FOLDER\PUBLIC_FOLDER,
         CACHE_FILE = \CACHE\VIEWS,
         FOLDERS_NATIVE_VIEWS = \FOLDER\VIEWS,
-        MAIN_PAGE = \FOLDER\VIEWS . \CONFIG['main'],
         FOLDERS_EXCEPTIONS = []; //[\APP\VIEWS\MYCOMPONENTS]; // Rutas excluidas del preprocesado
 
     private
@@ -32,7 +33,7 @@ class Prepocessor
     {
         // Se eliminan todos los archivos de la carpeta build (reinicializa)
 
-        $this->deleteDirectory(self::BUILD);
+        $this->deleteDirectory(self::PUBLIC_FOLDER);
 
         // Indicamos si cacheamos el proceso
         $this->cacheable = $cacheable;
@@ -41,7 +42,7 @@ class Prepocessor
         // Reseteamos los archivos de construccion
         if (file_exists(self::BUNDLE_CSS)) unlink(self::BUNDLE_CSS);
         if (file_exists(self::BUNDLE_JS)) unlink(self::BUNDLE_JS);
-        if (!file_exists(self::BUILD)) mkdir(self::BUILD, 0775, true);
+        if (!file_exists(self::PUBLIC_FOLDER)) mkdir(self::PUBLIC_FOLDER, 0775, true);
 
         // Compilamos los archivos js
         $this->listar(\FOLDER\JS);
@@ -68,7 +69,7 @@ class Prepocessor
                     $file = $path . $current;
                     #pr($file);
                     $this->file = $file;
-                    $file_build =  self::BUILD . $build_path;
+                    $file_build =  self::PUBLIC_FOLDER . $build_path;
                     $this->path = $path;
 
                     if (is_dir($file)) {
@@ -92,23 +93,33 @@ class Prepocessor
      */
     private function build($file, $file_build): self
     {
-        // Obtenemos el ontsenido del archivo se instancia Tag
+        // Obtenemos el contenido del archivo y se instancia en una clase Tag
         $this->get_content($file);
-
+           
         // Quitamos los comentarios 
         $this->el->clear();
 
         // No se la aplicamos a los componentes para que mantengan la encapsulación
-        if (!$this->is_component()) $this->sintax();
+        // Y si se ha declarado el atributo compile en false es pq no se desea que se precompile el elemento.   
+
+        $compile = ($this->el->attrs('compile')==false);
+        if (!$this->is_component() && $compile) $this->sintax();
 
         // Construimos el build.js con todas las clases
         $this->build_js();
 
         if ($file == self::MAIN_PAGE) {
-            $queueCSS = '<link rel="stylesheet" href="' . self::BUNDLE_CSS . '">';
+            if (self::INCLUDE_ASSETS) {
+                $queueCSS = file_get_contents(self::BUNDLE_CSS);
+                $queueCSS = '<style type="text/css">' . $queueCSS . '</style>';
+                $content_JS = file_get_contents(self::BUNDLE_JS);
+                $content_JS = '<script>' . $content_JS . '</script>';
+            } else {
+                $queueCSS = '<link rel="stylesheet" href="' . self::BUNDLE_CSS . '">';
+                $content_JS = "<script src='" . self::BUNDLE_JS . "'></script>";
+            }
             $this->el->replace('</head>', $queueCSS . '</head>');
-            $queueJS = "<script src='" . self::BUNDLE_JS . "'></script>";
-            $this->el->replace('</body>', $queueJS . '</body>');
+            $this->el->replace('</body>', $content_JS . '</body>');
         }
 
         // Compresión salida html
@@ -187,7 +198,7 @@ class Prepocessor
     private function sintax_if(): self
     {
 
-        $regex_conditional = '/@if(\s)*?\((.)*?\)(.)*?@endif/sim';
+        $regex_conditional = '/[^\'\`\"]@if(\s)*?\((.)*?\)(.)*?@endif/sim';
         $start_condition = '/@if(\s)*?\((.)*?\)/sim';
         $midle_condition = '/@else(\s)*?\((.)*?\)/sim';
         $end_condition = '/@endif/i';;
@@ -261,7 +272,7 @@ class Prepocessor
     private function sintax_for(): self
     {
         if (
-            $len = preg_match_all('/@for\s*\((.*?)\)(.*?)@endfor/sim', $this->el->body(), $matches)
+            $len = preg_match_all('/[^\`\'\"]@for\s*\((.*?)\)(.*?)@endfor/sim', $this->el->body(), $matches)
         ) {
             for ($i = 0; $i < $len; $i++) {
                 $res = '';
@@ -352,24 +363,26 @@ class Prepocessor
         return @$a ?: [];
     }
     /**
-     * Procesa la sintaxis de los elementos @include()
+     * Procesa la sintaxis de los elementos @include() → forma simplificada de include de php
      */
     private function includes(): self
     {
-        if (
-            $len = preg_match_all('/\@include\s*\((.*?)\)\s/', $this->el->body(), $matches)
-        ) {
+        $len = preg_match_all('/[^\`\"\'\#](\@include\s*?\((.*)\))/', $this->el->body(), $matches);
+        if ($len) {
             for ($i = 0; $i < $len; $i++) {
-                $body = $matches[1][$i];
+                $file = $matches[2][$i];
+                $search = $matches[1][$i]; 
                 // Sintaxis para las variable cargadas desde los controladores
                 if (
-                    $len2 = preg_match_all('/\$\$(\w+\-?\w*)/is', $body, $match)
+                    $len2 = preg_match_all('/\$\$(\w+\-?\w*)/is', $file, $match)
                 ) {
                     for ($j = 0; $j < $len2; $j++) {
-                        $body = str_replace($match[0][$j], "\$_FILES['{$match[1][$j]}']", $body);
+                        str_replace($match[0][$j], "\$_FILES['{$match[1][$j]}']", $file);
                     }
                 }
-                $this->el->replace($matches[0][$i], "<?php include($body)?>");
+                $file = self::PUBLIC_FOLDER . $file;
+                
+                $this->el->replace($search, "<?php include('{$file}')?>");
             }
         }
         return $this;
@@ -381,15 +394,14 @@ class Prepocessor
     {
         $content = $this->el->body();
         if (
-            preg_match_all('#\$\$(\w+\-?\w*)#is', $content, $matches)
+            preg_match_all('#[^\`\"\'](\$\$(\w+\-?\w*))#is', $content, $matches)
         ) {
-            for ($i = 0; $i < count($matches[0]); $i++) {
-                $str = '<?=$_FILES["' . trim($matches[1][$i] ?: null, '\$') . '"]?>';
-                $content = str_replace($matches[0][$i], $str, $content);
+            for ($i = 0; $i < count($matches[1]); $i++) {
+                $str = '<?=$' . trim($matches[2][$i] ?: null, '\$') . '?>';
+                $content = str_replace($matches[1][$i], $str, $content);
             }
             $this->el->body($content);
         }
-
         return $this;
     }
     /**

@@ -47,13 +47,12 @@ class Tag
             // Valores por defecto
             $this->type = $matches[1];
     
-    
             // Caso especial pattern se busca manualmente por su particularidad
             if(preg_match("/pattern\s*=\s*([\'\"])(.*?)\\1/sim", $matches[2], $match)){
     
                 // Guardamos el elemento
                 $this->attrs('pattern', $match[2]);
-                // Lo quitamos del estring de busqueda          
+                // Lo quitamos del string de busqueda          
                 $matches[2] = str_replace($match[0],'', $matches[2]);
     
             }
@@ -62,6 +61,8 @@ class Tag
                 // options1={"perro1":"de", "gato1":1} class="SOEL" REQUIRED 
                 $len = preg_match_all("/(\w+)=?(([\'\"]?)[\[\{](.*?)]\\3|([\'\"])(.*?)\\5)?/sim", $matches[2], $matches)
             ) {
+
+                // Atributos opcionales
                 for ($i = 0; $i < $len; $i++) {
                     $name_attr = $matches[1][$i];
                     $value = empty($matches[2][$i]) ? true : $matches[2][$i];
@@ -150,7 +151,7 @@ class Tag
      * Funcion auxiliar para reemplazar partes del elemento
      */
     public function replace($arg, $val = null, $count = -1): int
-    {
+    {   
         $this->element = str_replace($arg, $val, $this->element, $count);
 
         if (

@@ -17,30 +17,37 @@ namespace core;
 class Router
 {
     // Vista de inicio
-    const MAIN = \FOLDER\PUBLIC_FOLDER . \CONFIG['main'];
+    const 
+        MAIN =  \CONFIG['main'],
+        PUBLIC_FOLDER = \FOLDER\PUBLIC_FOLDER;
 
     private
+        $view,
         $data,
         $db,
         $controller,
         $action;
 
     function __construct($params)
-    {
+    {   
         $this->data = new Data;
+        if (isset($params['data'])) $this->data->addItems($params['data']);
+        $this->view = $params['view'] ?? self::MAIN;
 
         // Valores por defecto
         $this->db = \CONFIG['db'];
         $this->controller =  ucfirst($params['controller'] ?? null);
 
         if (strtoupper($_SERVER['REQUEST_METHOD']) === 'POST') $this->isPost($params);
-        elseif (strtoupper($_SERVER['REQUEST_METHOD']) === 'GET')  $this->isGet($params['view']);
+        elseif (strtoupper($_SERVER['REQUEST_METHOD']) === 'GET')  $this->isGet();
     }
-    private function isGet($view)
+    private function isGet()
     {
+
         // Comprobar si la vista existe 
-        $cls_view = new \controllers\ViewsTemplate($view, $this->data);
-        return $cls_view->print_view($view);
+        $cls_view = new \controllers\ViewsTemplate(self::PUBLIC_FOLDER . $this->view, $this->data);
+
+        return $cls_view->print_view();
 
         // Comprobar si tiene un controlador
 
@@ -112,9 +119,9 @@ class Router
         $nameClass = '\\controllers\\' . $this->controller;
 
         $cont = $this->isController($this->controller)
-            ? new $nameClass( $this->data )
-            : new \core\Controller( $this->controller, $this->data );
-        
-            return $cont;
+            ? new $nameClass($this->data)
+            : new \core\Controller($this->controller, $this->data);
+
+        return $cont;
     }
 }
