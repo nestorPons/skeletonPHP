@@ -42,3 +42,14 @@ Resultado html:
     <span class="caption">Aceptar</span> 
 </button>
 ```
+
+ 
+    La forma de crearlo es en un archivo con el nombre del componente que se desea. <br>
+    Se debe iniciar y acabar con el pseudo-tag component <code>&lt;component id=""&gt;Codigo...&lt;/component&gt;</code>. <br>
+    Dentro de el incluiremos la estructura html, js y css si se desea, y será precompilada con las directivas Bone. <br>
+
+    Podemos encapsularle unos estilos propios mediante el tag <code>&lt;style lang="" scoped&gt;&lt;style&gt;</code> con el atributo lang se declarará el sublenguaje que se esté empleando: Lesscss, Sass etc.. <br>
+    Para añadir la funcionalidad al componente se declara la etiqueta &lt;script scope&gt;&lt;script&gt; <br>
+
+    Los atributos que se le pasan al componente a su llamada se declaran como variables Bone. 
+   

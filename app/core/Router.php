@@ -44,9 +44,13 @@ class Router
     private function isGet()
     {
 
+<<<<<<< HEAD
         // Comprobar si la vista existe 
         $cls_view = new \controllers\ViewsTemplate(self::PUBLIC_FOLDER . $this->view, $this->data);
 
+=======
+        $cls_view = new \controllers\ViewsTemplate($view, $this->data);
+>>>>>>> ad50d968f918172ef00df17d078da3921c883ee0
         return $cls_view->print_view();
 
         // Comprobar si tiene un controlador
