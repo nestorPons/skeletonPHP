@@ -1,15 +1,23 @@
 <!-- Encapsulado en el tag component-->
 <component id="--id" class="">
     <!-- Estructura HTML del componente -->
-    <label class="bordered">Componente ejemplo: $$label</label>
+    <label class="bordered">Atributo label: $$label</label>
+    <span>--content</span>
     <!-- Estilos personales del componente -->
+
     <style scoped>
         label{
             display: block;
-            color: red;
+            color: green;
             cursor: pointer;
         }
     </style>
+    <ul>
+        @for($$mydataobject)
+            <li>$$key $$value</li>
+        @endfor
+    </ul>
+        
     <!-- Comportamiento del componente -->
     <script scoped>
         // Necesario para la correcta identificación del componente

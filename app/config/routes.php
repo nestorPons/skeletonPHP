@@ -15,7 +15,7 @@ const CONTROLLERS   = SRC . 'controllers/';
 const VIEWS         = SRC . 'views/';
 const JS            = SRC . 'js/';
 const IMG           = SRC . 'img/';
-const MYCOMPONENTS  = SRC . 'mycomponents/';
+const MYCOMPONENTS  = SRC . 'components/';
 const STYLES        = SRC . 'styles/';
 
 

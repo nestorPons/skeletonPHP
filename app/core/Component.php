@@ -23,7 +23,6 @@ class Component extends Tag
                 }
                 $data = self::my_json_decode($data);
             }
-
             foreach ($data as $key => $val) {
                 $this->attrs($key, $val);
             }
@@ -84,7 +83,7 @@ class Component extends Tag
         $content = stripcslashes($content);
         $content = self::search_globals_vars($content);
         // Buscamos la directiva @content y la cambiamos por el contenido 
-        $this->replace('@content', $content);
+        $this->replace('--content', $content);
 
         return $this;
     }
@@ -237,5 +236,4 @@ class Component extends Tag
         }
         return $this;
     }
-    
 }

@@ -33,8 +33,8 @@ trait ToolsComponents
     protected function search_components($text_process): array
     {
         if (!isset($this->str_components))  $this->search_exist_components();
-        // Buscar el primer componente
 
+        // Buscar el primer componente
         if (
             preg_match(
                 "/(<({$this->str_components})\s*([^>]*)\/?>)(.*)/si",
@@ -74,6 +74,7 @@ trait ToolsComponents
                                 // Tenemos el componente completo
                                 $rest = substr($text_process, 0, $pos);
                                 $element = $tag_code . $rest;
+
                                 $this->found_components[] = new Tag($element);
                                 $text_process = \str_replace($rest, '', $text_process);
                             } else {

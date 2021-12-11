@@ -116,7 +116,6 @@ class Query
     public function query(string $sql, $params = null){
 
         $this->sql = trim(str_replace("\r", " ", $sql)); 
-        // pr($this->sql, $params); 
         // Prepara la sentencia con sus parametros y la inicia
         $respond = $this->init($params);
 

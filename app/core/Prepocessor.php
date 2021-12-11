@@ -67,7 +67,7 @@ class Prepocessor
                 if ($current != "." && $current != "..") {
                     $build_path = str_replace(self::FOLDERS_NATIVE_VIEWS, '', $path . $current);
                     $file = $path . $current;
-                    #pr($file);
+
                     $this->file = $file;
                     $file_build =  self::PUBLIC_FOLDER . $build_path;
                     $this->path = $path;
@@ -101,7 +101,6 @@ class Prepocessor
 
         // No se la aplicamos a los componentes para que mantengan la encapsulación
         // Y si se ha declarado el atributo compile en false es pq no se desea que se precompile el elemento.   
-
         $compile = ($this->el->attrs('compile')==false);
         if (!$this->is_component() && $compile) $this->sintax();
 
@@ -177,13 +176,14 @@ class Prepocessor
      */
     private function declare_component(): self
     {
+
         foreach ($this->search_components($this->el->body()) as $tag) {
 
-            $content = $tag->body() ?: 'null';
+            $content = $tag->body() ?: 'null';  
             $str_content = addslashes($content);
-
+    
             $str_at = json_encode($tag->attrs());
-
+  
             $this->el->replace(
                 $tag->code(),
                 "<?php \$c = new \core\Component('{$tag->type()}', '$str_at', '$str_content'); \$c->print();?>"

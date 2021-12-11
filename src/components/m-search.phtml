@@ -2,8 +2,8 @@
 <component id="--id" class="row col-sm-12 col-md-12">
     <datalist id="--id_datalist">
         @for($$options)
-        <option data-value="$$key" value="$$value">
-            @endfor
+            <option data-value="$$key" value="$$value">
+        @endfor
     </datalist>
     <input type="search" id="el--id" list="--id_datalist" class="$$class $$default" placeholder=" " style="$$style" name="$$name" tile="$$tile" pattern="$$pattern" list="$$list" tabindex="$$tabindex" onfocus="$$onfocus" onblur="$$onblur" onclick="$$onclick" onkeydown="$$onkeydown" onkeyup="$$onkeyup" onchange="$$onchange" onkeypress="$$onkeypress" $$required $$disabled $$readonly $$checked />
     <label for="el--id">$$label</label>

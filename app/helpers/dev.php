@@ -4,6 +4,16 @@ function pr(...$args){
     foreach($args as $arr){
 
         var_dump($arr);
+
+        
+    }
+}
+function pre(...$args){
+    foreach($args as $arr){
+        print('<pre>');
+        var_dump($arr);
+        print('</pre>');
+        
     }
 }
 function prs(...$args){
