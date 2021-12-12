@@ -23,6 +23,7 @@ class Tag
         if (!is_null($element)) {
             $this->code = $element;
             $this->element = $element;
+            
             $this->load();
         }
     }

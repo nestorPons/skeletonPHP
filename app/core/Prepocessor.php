@@ -275,12 +275,9 @@ class Prepocessor
             $len = preg_match_all('/[^\`\'\"]@for\s*\((.*?)\)(.*?)@endfor/sim', $this->el->body(), $matches)
         ) {
             for ($i = 0; $i < $len; $i++) {
-                $res = '';
                 $cond = $matches[1][$i];
-                $body = $matches[2][$i];
                 $struct = $matches[0][$i];
 
-                // Formato {"a":1,"b":2,"c":3,"d":4,"e":5} sin comillas exteriores
                 // Si la condcion tiene $$valor transformarlo en $valor
 
                 $s = preg_replace('/\@for\(.*?\)/i', '<?php foreach($' . ltrim($cond, '$') . ' as $key => $value):?>', $struct);

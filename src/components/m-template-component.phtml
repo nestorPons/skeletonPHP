@@ -11,6 +11,10 @@
             color: green;
             cursor: pointer;
         }
+        .toggled{
+            color: red !important; 
+            font-size: 3rem;
+        }
     </style>
     <ul>
         @for($$mydataobject)
@@ -21,11 +25,11 @@
     <!-- Comportamiento del componente -->
     <script scoped>
         // Necesario para la correcta identificación del componente
-        const $this = document.getElementById('--id') 
+        const el = document.getElementById('--id')
 
-        $this.onclick = e => {
+        el.onclick = e => {
             e.stopPropagation();
-            alert('Ejemplo de comportamiento de un componente');
+            el.className = 'toggled' == el.className ? '' : 'toggled';
         }
 
     </script>

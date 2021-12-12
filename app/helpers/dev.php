@@ -11,7 +11,7 @@ function pr(...$args){
 function pre(...$args){
     foreach($args as $arr){
         print('<pre>');
-        var_dump($arr);
+        htmlspecialchars($arr);
         print('</pre>');
         
     }
