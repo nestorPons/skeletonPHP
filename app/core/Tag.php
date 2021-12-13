@@ -19,11 +19,10 @@ class Tag
 
     function __construct(string $element = null)
     {
-
         if (!is_null($element)) {
             $this->code = $element;
             $this->element = $element;
-            
+
             $this->load();
         }
     }
@@ -47,19 +46,19 @@ class Tag
         }
 
         if ($matches) {
-
             // Valores por defecto
             $this->type = $matches[1];
+            $str_attrs = $matches[2];
+            $arr_extract_pattern = self::extract_pattern_attr($str_attrs);
 
             // Caso especial pattern se busca manualmente por su particularidad
-            if (preg_match("/pattern\s*=\s*([\'\"])(.*?)\\1/sim", $matches[2], $match)) {
-
+            if ($arr_extract_pattern[0]) {
+                //prs($matches[2]);
                 // Guardamos el elemento
-                $this->attrs('pattern', $match[2]);
-                // Lo quitamos del string de busqueda          
-                $matches[2] = str_replace($match[0], '', $matches[2]);
+                $this->attrs('pattern', $arr_extract_pattern[2]);
+                $str_attrs = $arr_extract_pattern[3];
             }
-            $str_attrs = $matches[2];
+
             // Regex extrae atributos de una cadena como:
             // attrJSON="{'key1':'val1', 'key2':1}" class="SOEL" 
             if (
@@ -292,4 +291,33 @@ class Tag
         //$this->preg("/[\r\n|\n|\r|\s]+/", " ");
         return $this;
     }
+    /**
+     * Extrae el tag pattern debido a  su singularidad. 
+     * @param element string con el elemento a analizar.
+     * @return array 
+     *      [0] bool true si se ha encontrado el atributo pattern.
+     *      [1] string con el elemento encontrado.
+     *      [2] string con el contenido del atributo pattern.
+     *      [3] string con el elemento sin el atributo pattern.  
+     *      
+     */
+    public static function extract_pattern_attr(string $element): array
+    {
+        $attr[] = null;
+        $value = false;
+        $target = ''; 
+        $mod_element = ''; 
+        // Caso especial pattern se busca manualmente por su particularidad
+        if (preg_match("/\bpattern\b\s*=\s*([\'\"])(.*?)\\1/sim", $element, $match)) {
+            $value = true;
+            $target = $match[0];
+            // Guardamos el elemento
+            $attr = $match[2];
+            // Lo quitamos del estring de busqueda          
+            $mod_element = str_replace($match[0], '', $element);
+        }
+
+        return [$value, $target, $attr, $mod_element ];
+    }
 }
+

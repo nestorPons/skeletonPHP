@@ -171,7 +171,7 @@ class Component extends Tag
         }
         return $this;
     }
-   /*  private function style_scoped(): self
+    /*  private function style_scoped(): self
     {
         if (
             preg_match('/<style(.*?)scoped[^<]*?>(.*?)<\/style>+/mis', $this->body(), $matches)
@@ -306,4 +306,6 @@ class Component extends Tag
         }
         return $this;
     }
+
+    
 }

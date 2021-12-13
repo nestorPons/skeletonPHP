@@ -2,6 +2,8 @@
 
 namespace core;
 
+use PhpParser\Node\Expr\Cast\Array_;
+
 /**
  * Clase gestión de datos
  */
@@ -18,6 +20,9 @@ class Data
             }
         }
     }
+    /**
+     * Añade un valor y opcionalmente su llave, al objeto Data. 
+     */
     function addItem($value, $key = null)
     {
         // Si vamos a pasar un array numerado creamos todos los métodos para extraer los atributos
@@ -29,7 +34,10 @@ class Data
             else return $this->{$value} = trim($value);
         }
     }
-    function addItems(array $params = null)
+    /**
+     * Añade un array u objeto al objeto Data. 
+     */
+    function addItems(array $params = null) : self
     {
         if ($params) {
             foreach ($params as $key => $value)
@@ -42,7 +50,10 @@ class Data
         if ($arg2) return $this->addItem($arg2, $arg1);
         else return $this->addItem($arg1);
     }
-    function getAll()
+    /**
+     * Obtiene todos los elementos guardados en formato array
+     */
+    function getAll() : Array
     {
         return $this->toArray();
     }
