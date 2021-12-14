@@ -8,6 +8,12 @@ final class DataTest extends TestCase
      */
     public function testData(array $provider): void
     { 
+
+        $classJSON = new \core\Data('{"valorA1":"uno", "valorA2":2}');
+        $this->assertIsObject($classJSON->toJSON()); 
+        $this->assertIsString($classJSON->toString());
+        //fwrite(STDOUT, var_dump($classJSON->toString()) . "\n");
+
         $class = new \core\Data(['valorA1', 'valorA2']);
         $this->assertIsArray($class->getAll(), 'No es array');
         //fwrite(STDOUT, var_dump($class->getAll()) . "\n");
@@ -19,6 +25,7 @@ final class DataTest extends TestCase
         $class->addItems(['valueA4', 'valueA5']); 
         $this->assertIsArray($class->getAll(), 'No es array');
         //fwrite(STDOUT, var_dump($class->getAll()) . "\n");
+
     }
 
     public function additionProviderArray()

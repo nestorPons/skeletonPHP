@@ -1,4 +1,5 @@
 <?php namespace FOLDER;
+
 // Carpetas
 const PUBLIC_FOLDER_ROOT = 'htdocs/';
 const APP = ROOT . 'app/'; 
@@ -15,7 +16,7 @@ const CONTROLLERS   = SRC . 'controllers/';
 const VIEWS         = SRC . 'views/';
 const JS            = SRC . 'js/';
 const IMG           = SRC . 'img/';
-const MYCOMPONENTS  = SRC . 'components/';
+const COMPONENTS  = SRC . 'components/';
 const STYLES        = SRC . 'styles/';
 
 

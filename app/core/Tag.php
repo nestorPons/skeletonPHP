@@ -111,7 +111,7 @@ class Tag
     /**
      * Elimina atributos del elemento
      */
-    public function del(string $attr): bool
+    public function delAttr(string $attr): bool
     {
         if (
             preg_match("/$attr(\s*=\s*[\"']+\w*?['\"]+?)/si", $this->element, $matches)
@@ -193,7 +193,7 @@ class Tag
         /**
          * 0 -> Todo
          * 1 -> tag
-         * 2 -> argimentos
+         * 2 -> argumentos
          * 3 -> contenido
          */
         if (
@@ -318,6 +318,12 @@ class Tag
         }
 
         return [$value, $target, $attr, $mod_element ];
+    }
+    /**
+     * Imprime el tag 
+     */
+    function print() : void {
+        print_r($this->element);
     }
 }
 

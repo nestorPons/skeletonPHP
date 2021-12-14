@@ -15,7 +15,7 @@ trait ToolsComponents
     private function search_exist_components() : void
     {
         $str_components = '';
-        $folder = \FOLDER\MYCOMPONENTS;
+        $folder = \FOLDER\COMPONENTS;
         if (!file_exists($folder)) mkdir($folder, 0777, true);
         $gestor = opendir($folder);
         // Busca los componentes en la carpeta de vistas componentes

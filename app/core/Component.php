@@ -1,18 +1,22 @@
-<?php
-
-namespace core;
-
+<?php namespace core;
 /**
- * Clase de madre de los componentes html
+ * Clase de madre de los componentes personalizados.
+ * 
  */
 class Component extends Tag
 {
     use  ToolsComponents;
-    const FOLDER_COMPONENTS = \FOLDER\MYCOMPONENTS;
-
-    function __construct(string $type, $data = null, string $content = null)
+    const FOLDER_COMPONENTS = \FOLDER\COMPONENTS;
+	/**
+	 * Construye el componente personalizado.
+	 * @param string $type El nombre del tag del componente a construir 
+	 * @param string $attr_JSON los atributos del componente en formato JSON
+     * @param string $content el contenido del componente.
+	 */
+    function __construct(string $type, string $attr_JSON = null, string $content = null)
     {
-        if ($data) {
+        if ($attr_JSON) {
+            $data = $attr_JSON;
             if (is_string($data)) {
                 // Tratamos el texto si lleva tags de php
                 $data = self::search_globals_vars($data);
@@ -139,35 +143,44 @@ class Component extends Tag
         if (
             preg_match('/<style.*?scoped[^<]*?>(.*?)<\/style>/mis', $this->body(), $matches)
         ) {
+            $tag_style = new Tag($matches[0]);
+            $lang = $tag_style->attrs('lang');
+            $tag_style->delAttr('lang'); 
+
+
             $id_css =  '#' . $this->id();
             // Quitamos el comando scope
-            $tagstyle = str_replace('scoped', '', $matches[0]);
+            $tag_style->element(str_replace('scoped', '', $tag_style->element()));
             // Quitamos las reglas principales
             //$tagstyle = preg_replace('/@import.*?;/', '', $tagstyle);
             //$tagstyle = preg_replace('/@charser.*?;/', '', $tagstyle);
 
             // Se añade el id para la encapsulación 
             // Si es una clase se aplica a todo el objeto de la clase
-            if (preg_match_all('/\.\b\w+\b{(?:(?:\{(?:[^{}])*\})|(?:[^{}]))*\}/mixs', $tagstyle, $mts)) {
-
+            if (preg_match_all('/\.\b\w+\b\s*{(?:(?:\{(?:[^{}])*\})|(?:[^{}]))*\}/mixs', $tag_style->body(), $mts)) {
+                
                 foreach ($mts[0] as $key => $val) {
-                    $tagstyle = str_replace($val, $id_css . $val, $tagstyle);
+                    $tag_style->body(str_replace($val, $id_css . $val, $tag_style->body()));
                 }
             }
-
+            
             // Todos los demás serán anidados 
-            if (preg_match_all('/[^\.]\b\w+\b{(?:(?:\{(?:[^{}])*\})|(?:[^{}]))*\}/mixs',  $tagstyle, $mts)) {
-
+            if (preg_match_all('/[^\.]\b\w+\b\s*{(?:(?:\{(?:[^{}])*\})|(?:[^{}]))*\}/mixs', $tag_style->body(), $mts)) {
+                
                 foreach ($mts[0] as $key => $val) {
-                    $tagstyle = str_replace($val, $id_css . ' ' . $val, $tagstyle);
+                    $tag_style->body(str_replace($val,$id_css . ' ' . $val, $tag_style->body()));
                 }
             }
-            // Se coloca el id a los estilos 
-            $less = new \lessc;
-            $content_less = $less->compile($tagstyle);
+            
+            if ($lang == 'sassc') {
+          
+                //TODO añadir procesamiento SASSC
+            } else { 
 
-            $tagstyle = str_replace($matches[1], $content_less, $tagstyle);
-            $this->replace($matches[0], $tagstyle);
+                $less = new \lessc;
+                $tag_style->body($less->compile($tag_style->body()));
+                $this->replace($matches[0], $tag_style->element());
+            }
         }
         return $this;
     }

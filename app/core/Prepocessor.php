@@ -18,7 +18,7 @@ class Prepocessor
         PUBLIC_FOLDER = \FOLDER\PUBLIC_FOLDER,
         CACHE_FILE = \CACHE\VIEWS,
         FOLDERS_NATIVE_VIEWS = \FOLDER\VIEWS,
-        FOLDERS_EXCEPTIONS = []; //[\APP\VIEWS\MYCOMPONENTS]; // Rutas excluidas del preprocesado
+        FOLDERS_EXCEPTIONS = []; //[\APP\VIEWS\COMPONENTS]; // Rutas excluidas del preprocesado
 
     private
         $el, // clase Tag -> Elemento html del archivo procesado
@@ -160,13 +160,13 @@ class Prepocessor
                 $this->less($tag->body());
             }
             // eliminamos el argumento scoped
-            $tag->del('scoped');
-            $tag->del('lang');
+            $tag->delAttr('scoped');
+            $tag->delAttr('lang');
         }
         // Encapsulación de los scripts
         foreach ($this->tags('script') as $tag) {
             $this->add_script_scope($tag);
-            $tag->del('scoped');
+            $tag->delAttr('scoped');
         }
 
         return $this;
@@ -182,11 +182,11 @@ class Prepocessor
             $content = $tag->body() ?: 'null';  
             $str_content = addslashes($content);
     
-            $str_at = json_encode($tag->attrs());
-  
+            $JSON_Attr = json_encode($tag->attrs());
+            
             $this->el->replace(
                 $tag->code(),
-                "<?php \$c = new \core\Component('{$tag->type()}', '$str_at', '$str_content'); \$c->print();?>"
+                "<?php \$c = new \core\Component('{$tag->type()}', '$JSON_Attr', '$str_content'); \$c->print();?>"
             );
         }
 
@@ -235,7 +235,7 @@ class Prepocessor
      */
     private function is_component(): bool
     {
-        return ($this->path == \FOLDER\MYCOMPONENTS);
+        return ($this->path == \FOLDER\COMPONENTS);
     }
     private function add_script_scope(Tag $tag): self
     {

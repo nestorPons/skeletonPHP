@@ -3,6 +3,7 @@
     "description": "Framework para desarrollo de paginas php conn carga rapida ajax",
     "license": "MIT",
     "autoload": {
+        "psr-0": { "": "app/lib/" },
         "psr-4": {
             "core\\":"app/core/",
             "helpers\\":"app/helpers//",

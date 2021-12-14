@@ -5,18 +5,29 @@ namespace core;
 use PhpParser\Node\Expr\Cast\Array_;
 
 /**
- * Clase gestión de datos
+ * Clase gestión de datos para los componentes
  */
 class Data
 {
-    // Creamos los atributos en el constructor
-
+    /**
+     * Los datos que se proporcionan al objeto serán convertidos en atributos del mismo. 
+     * @param string|array|object Cualquier tipo de datos. 
+     * 
+     */
     function __construct($data = null)
     {
         if ($data) {
-            if (is_object($data)) $data = get_object_vars($data);
-            foreach ($data as $key => $value) {
-                $this->addItem($value, $key);
+            if (is_string($data)) {
+                if (preg_match("/^\{(.*?)\}$/sim", $data)) $data = json_decode($data, true);
+                else {
+                    $this->addItem($data);
+                    $data = [];
+                }
+            } elseif (is_object($data)) $data = get_object_vars($data);
+            if ($data) {
+                foreach ($data as $key => $value) {
+                    $this->addItem($value, $key);
+                }
             }
         }
     }
@@ -25,9 +36,6 @@ class Data
      */
     function addItem($value, $key = null)
     {
-        // Si vamos a pasar un array numerado creamos todos los métodos para extraer los atributos
-        // creeamos el método para la extraccion de datos 
-
         if ($key) return $this->{$key} = $value;
         else {
             if (is_object($value)) return $this->{get_class($value)} = $value;
@@ -37,7 +45,7 @@ class Data
     /**
      * Añade un array u objeto al objeto Data. 
      */
-    function addItems(array $params = null) : self
+    function addItems(array $params = null): self
     {
         if ($params) {
             foreach ($params as $key => $value)
@@ -53,7 +61,7 @@ class Data
     /**
      * Obtiene todos los elementos guardados en formato array
      */
-    function getAll() : Array
+    function getAll(): array
     {
         return $this->toArray();
     }
@@ -107,9 +115,11 @@ class Data
         if (!(isset($this->{$arg}) && strlen($this->{$arg}) < $len)) Error::die('E009', $this->{$arg} ?? null);
         return true;
     }
-    // Combierte los datos en un array 
-    // $key => array de claves que se desean eliminar
-    function toArray(array $key = null)
+    /**
+     * Combierte los datos en un array
+     * @param array $key => array de claves que se desean eliminar
+    */  
+    function toArray(array $key = null): array
     {
         $data = (array)$this;
         if ($key) {
@@ -119,10 +129,24 @@ class Data
         }
         return $data;
     }
-    function toJSON()
+    /**
+     * Método que devuelve los datos en un objeto JSON
+     * @return Object JSON
+     */
+    function toJSON(): object
+    {
+        $en = json_encode($this->toArray());
+        return json_decode($en);
+    }
+    /**
+     * Método que devuelve los datos en un string
+     * @return string cadena de texto formato json con los datos almacenados  en el objeto 
+     */
+    function toString(): string
     {
         return json_encode($this->toArray());
     }
+
     static function codify(string $arg)
     {
         $originals = 'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ';
