@@ -184,58 +184,7 @@ class Component extends Tag
         }
         return $this;
     }
-    /*  private function style_scoped(): self
-    {
-        if (
-            preg_match('/<style(.*?)scoped[^<]*?>(.*?)<\/style>+/mis', $this->body(), $matches)
-        ) {
-            prs($this->body());
-            $css_id =  '#' . $this->id();
-            // Quitamos el comando scoped
-            $tagstyle = str_replace('scoped', '', $matches[0]);
-
-            $tag = new \core\Tag($tagstyle);
-            prs($tagstyle);
-            $str_body = $tag->body();
-
-            // Compilamos con lessphp si el lenguaje es less
-            $lang = $tag->attrs('lang');
-
-            if ($lang == 'sassc') {
-                //TODO añadir procesamiento SASSC
-            } else {
-                // Quitamos las reglas principales
-                //$tagstyle = preg_replace('/@import.*?;/', '', $tagstyle);
-                //$tagstyle = preg_replace('/@charser.*?;/', '', $tagstyle);
-
-                // Se añade el id para la encapsulación 
-                // Si es una clase se aplica a todo el objeto de la clase
-                if (preg_match_all('/\.\b\w+\b{(?:(?:\{(?:[^{}])*\})|(?:[^{}]))*\}/mixs', $tag->body(), $matches)) {
-
-                    foreach ($matches[0] as $key => $val) {
-                        $str_body = str_replace($val, $css_id . $val, $str_body);
-                    }
-                }
-
-                // Todos los demás serán anidados 
-                if (preg_match_all('/[^\.]\b\w+\b{(?:(?:\{(?:[^{}])*\})|(?:[^{}]))*\}/mixs',  $tag->body(), $matches)) {
-
-                    foreach ($matches[0] as $key => $val) {
-                        $str_body = str_replace($val, $css_id . ' ' . $val, $str_body);
-                    }
-                }
-
-                // Se coloca el id a los estilos 
-                $less = new \lessc;
-                $content_less = $less->compile($str_body);
-
-                prs($g_matches[1], $content_less, $tagstyle);
-                $tagstyle = str_replace($g_matches[1], $content_less, $tagstyle);
-                $this->replace($g_matches[0], $tagstyle);
-            }
-        }
-        return $this;
-    } */
+   
     // Comportamiento scoped para script-> individualiza el style en el objeto contenedor
     private function script_scoped(): self
     {
@@ -319,6 +268,4 @@ class Component extends Tag
         }
         return $this;
     }
-
-    
 }
