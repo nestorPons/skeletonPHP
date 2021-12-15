@@ -6,6 +6,7 @@ nav:
   - Inicio: 'index.md'
   - Carpetas: 'folders.md'
   - Componentes: 'components.md'
+  - Bone: 'bone.md' 
 theme:
     name: readthedocs
     logo:
