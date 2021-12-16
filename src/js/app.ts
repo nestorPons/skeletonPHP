@@ -1,148 +1,76 @@
-// Método get js
-let $_GET = {}
-document.location.search.replace(/\??(?:([^=]+)=([^&]*)&?)/g, function () {
-    function _decode(s) {
-        return decodeURIComponent(s.split("+").join(" "));
-    }
-    $_GET[_decode(arguments[1])] = _decode(arguments[2]);
-});
-
 const app = {
-    ver: '2.2',
+    ver: '2.3',
     timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+    controller: '',
+    /**
+     * Se inicia conm la aplicación y modifica algunos comportamientos del DOM
+     */
+    load() : void { 
+        /**
+         * Se modifica el comportamiento de los formularios 
+         * El action del formulario es el controlador al que hay que llamar
+         */ 
+         
+        $('form').on('submit', async (el, e) => {
+            e.stopPropagation();
+            e.preventDefault();
+            let formData = new FormData(e.target);
+
+            switch (e.target.method) {
+                case 'post':
+                    let frm = formData.append('controller', e.target.action);
+                    this.postSend(frm);
+                    break;
+                case 'get':
+                    //this.getView(form)
+                    break;
+                default:
+                    break;
+            }
+        })
+    },
     /**
      * Carga de las vistas
      * @param {String} view 
      * @param {JSON} data datos que se mandan a la vista
      * @param {Bool} load Si refresca o no el contenedor
      * @param {String} container Componente/id/clase donde se carga la vista
-     * @param {function} callback 
      */
-    getView(view = 'index', data = {}, load = false, container = 'main', callback) {
-        let d = {
-            'view': view,
-            'data': data
-        }
-        this.ajax('get', d, (html, respond) => {
+    getView: async (view = 'index', data = {}, load = false, container = 'main'): Promise<void> => {
+        let formData = new FormData();
+        formData.append('view', view);
+        formData.append('data', data.toString());
 
-            if (load) {
-                $(container).find('section').hide().end().append(html);
-                // Inicializamos el método inicializador del objeto
-                if (app[view] != undefined) {
-                    if (exist(app[view].load)) 
-                        app[view].load();
-                    
-                }
-                this.sections.inicialize(view);
-            } else {
-                $(container).append(html);
-            }
-            typeof callback == 'function' && callback(html);
-        }, 'html');
-
-    },
-    // Peticiones con datos
-    post(data, callback, error = true) { // Si esta cargado el navbar poner el spinner en cada petición
-        if (typeof navbar != 'undefined') 
-            navbar.spinner.show(data.controller);
-        
-
-        if (typeof data.controller === 'undefined') {
-            this.mens.error({success: false, error: 'No se ha asignado  controlador'})
-            return false;
-        }
-        if (typeof data.db === 'undefined') 
-            data.db = $_GET['db'];
-        
-
-
-        this.ajax('post', data, (respond, status, xhr, dataType) => {
-            if (typeof navbar != 'undefined') 
-                navbar.spinner.hide(data.controller);
-            
-
-            let d = null;
-            // La respuesta puede ser json o html
-            try { // comprobamos si es json
-                d = JSON.parse(respond);
-                // la respuesta es JSON
-                console.log(d);
-
-                // Imprimimos mensaje de error si lo hay
-                if (error) 
-                    if ((isEmpty(d.success) || d.success == false || d.success == 0) && exist(d.mens)) {
-                        console.log('Error en la respuesta!!');
-                        this.mens.error(d.mens || 'No se ha podido rehalizar la petición!');
-                        return false;
-                    }
-                
-
-            } catch (e) { // la respuesta es HTML
-                html = $(respond);
-                this.sections.toggle(html.attr('id'), _ => {
-
-                    html.appendTo('body');
-                    html.find('section').each((i, el) => {
-                        this.sections.loaded.push(el.id);
-                    })
-
-                })
-            } finally {
-                let resp = d ? d.data : null,
-                    state = d && d.mens ? false : true;
-                typeof callback == "function" && callback(resp, state);
-            }
+        let response = await fetch('index.php', {
+            method: 'POST',
+            body: formData
         });
+
+        let result = await response.json();
+
+        if (load) {
+            $(container).find('section').hide().end().append(result);
+            // Inicializamos el método inicializador del objeto
+            if (this[view] != undefined && exist(this[view].load)) this[view].load();
+            this.sections.inicialize(view);
+        } else {
+            $(container).append(result);
+        }
     },
+    /**
+     * Peticiones post a la aplicación 
+     * @param {FormData object} formData Objeto FormData
+     * @param {function} callback funcion de respuesta
+     * @param {boolean} error Si se desea imprimir mensaje de error
+     */
+    postSend: async (formData, callback, error = true): Promise<void> => {
 
-    ajax(type, data, callback, dataType) {
-        const jwt = sessionStorage.getItem('jwt'),
-            my_header = (jwt) ? {
-                jwt: jwt
-            } : {};
-
-        $.ajax({
-            url: 'index.php',
-            type: type,
-            data: data,
-            headers: my_header,
-            dataType: dataType,
-            success: (respond, status, xhr, dataType) => {
-                typeof callback == "function" && callback(respond, status, xhr, dataType);
-            },
-            error: (xhr, status, error) => {
-                this.mens.error("Fallo de conexión \n No se pudo enviar los datos");
-                typeof callback == "function" && callback(null, 0);
-            }
+        let response = await fetch('index.php', {
+            method: 'POST',
+            body: formData
         });
-    },
-    loadSync(name, callback) {
-        let s = document.createElement("script");
-        s.onload = callback;
-        s.src = name;
-        document.querySelector("body").appendChild(s);
-    },
-    loadAsync(src, callback) {
-        if (callback === void 0) {
-            callback = null;
-        }
-        var script = document.createElement('script');
-        script.src = src;
-        if (callback !== null) {
-            if (script.readyState) { // IE, incl. IE9
-                script.onreadystatechange = function () {
-                    if (script.readyState == "loaded" || script.readyState == "complete") {
-                        script.onreadystatechange = null;
-                        typeof callback == "function" && callback();
-                    }
-                };
-            } else {
-                script.onload = function () {
-                    typeof callback == "function" && callback();
-                };
-            }
-        }
-        document.getElementsByTagName('body')[0].appendChild(script);
+
+        console.log(await response.json());
     },
     mens: {
         error(mens) {
@@ -165,11 +93,8 @@ const app = {
         last: null,
         loaded: [],
         toggle(section, callback) {
-            if ($('section#' + section).is(':visible')) 
+            if ($('section#' + section).is(':visible'))
                 return false;
-            
-
-
             let $mainSection = $('section');
 
             if ($('#appadmin').length || $('#appuser').length) {
@@ -178,10 +103,8 @@ const app = {
 
             $mainSection.fadeOut('fast');
             $('section#' + section).fadeIn();
-            if (typeof callback === 'function') 
+            if (typeof callback === 'function')
                 callback();
-            
-
             this.inicialize(section);
         },
         show(section, callback) {
@@ -208,9 +131,10 @@ const app = {
         // Comportamiento de la sección activa al cargarse
         inicialize(section) {
 
-            if (section == 'appadmin') 
+            if (section == 'appadmin')
                 section = 'tpv';
-            
+
+
 
             this.active = section;
 
@@ -222,9 +146,9 @@ const app = {
                 typeof activeZone.open != 'undefined' && typeof activeZone.open == 'function' && activeZone.open();
 
                 // Carga del título de la sección
-                if (menu.tile) 
+                if (menu.tile)
                     menu.tile.textContent = activeZone.name;
-                
+
 
 
             }
@@ -248,7 +172,7 @@ const app = {
         filter() {
             typeof app[this.active].filter == 'function' && app[this.active].filter();
         },
-        search() {},
+        search() { },
         exit() {
             if (app[this.last] != undefined && typeof app[this.last].exit == 'function') {
                 app[this.last].exit(f => {
@@ -290,14 +214,15 @@ const app = {
     formToObject(form) {
         let obj = {};
         let elements = form.querySelectorAll("input, select, textarea");
-        for (let i = 0; i < elements.length; ++ i) {
+        for (let i = 0; i < elements.length; ++i) {
             var element = elements[i],
                 name = element.name,
                 value = (element.type == 'checkbox' || element.type == 'radio') ? ((element.checked) ? element.value : element.getAttribute('default') || 0) : element.value;
 
-            if (name) 
+            if (name)
                 obj[name] = value;
-            
+
+
 
         }
         return obj;
@@ -312,21 +237,21 @@ const app = {
         segundo = momentoActual.getSeconds();
 
         str_segundo = new String(segundo);
-        if (str_segundo.length == 1) 
+        if (str_segundo.length == 1)
             segundo = "0" + segundo;
-        
+
 
 
         str_minuto = new String(minuto);
-        if (str_minuto.length == 1) 
+        if (str_minuto.length == 1)
             minuto = "0" + minuto;
-        
+
 
 
         str_hora = new String(hora);
-        if (str_hora.length == 1) 
+        if (str_hora.length == 1)
             hora = "0" + hora;
-        
+
 
 
         horaImprimible = hora + " : " + minuto;
@@ -336,18 +261,20 @@ const app = {
         // setTimeout("app.clock()",1000)
     },
     loadDataToForm(data, form) {
-        if (data == undefined) 
+        if (data == undefined)
             return false;
-        
+
+
 
         var els = form.getElementsByTagName('input');
         for (const el of els) {
             if (el.attributes != undefined && el.hasAttribute('name')) {
                 if (el.type == 'checkbox') {
                     el.checked = data[el.attributes.name.value] > el.getAttribute('default');
-                } else 
+                } else
                     el.value = data[el.attributes.name.value];
-                
+
+
 
             }
         }
@@ -364,9 +291,8 @@ const app = {
     help() {
         this.mens.info(`
             TPVOnline 
-            v.${
-            this.ver
-        }
+            v.${this.ver
+            }
             Autor : Néstor Pons Portolés
             Email : nestorpons@gmail.com
             Licencia : MIT 2019
@@ -386,7 +312,7 @@ const DB = {
     current: 0,
     table: null,
     key(table, key, value) {
-        this.get(table).then(d => {});
+        this.get(table).then(d => { });
     },
     // Consultar datos de la bd local
     get(table = this.table, key, value, filter) {
@@ -395,19 +321,20 @@ const DB = {
                 const k = (typeof el[key] === 'string') ? el[key].toLowerCase().trim() : el[key],
                     v = (typeof value === 'string') ? value.toLowerCase().trim() : value;
 
-                if (k) 
+                if (k)
                     return typeof k === 'number' ? k == v : k.includes(v);
-                 else 
+                else
                     return false;
-                
+
+
 
             }
             if (table == undefined) { // Si no le paso un indice me devuelve todos los nombres de tablas
                 resolve(this.storage);
             } else { // Si no se pasan key o value devolvemos todos los registros
-                if ((key == undefined || value == undefined) && filter == undefined) 
+                if ((key == undefined || value == undefined) && filter == undefined)
                     resolve(this.storage[table]);
-                 else 
+                else
                     resolve(this.storage[table].filter(el => {
                         if (filter) {
                             if (filter.indexOf('==') != -1) {
@@ -420,12 +347,14 @@ const DB = {
                                 let arr = filter.split('<');
                                 return _equalValues(el) && el[arr[0].trim()] < arr[1].trim();
                             };
-                        } else 
+                        } else
                             return _equalValues(el);
-                        
+
+
 
                     })) || reject(false);
-                
+
+
 
             };
         });
@@ -437,16 +366,18 @@ const DB = {
                 let i = this.storage[table].findIndex(el => {
                     return el[key] == value;
                 })
-                if (i == -1) 
+                if (i == -1)
                     this.storage[table].push(data);
-                 else 
+                else
                     this.storage[table][i] = data;
-                
+
+
 
             } else { // inicializa
-                if (typeof this.storage[table] == 'undefined') 
+                if (typeof this.storage[table] == 'undefined')
                     this.storage[table] = [];
-                
+
+
 
                 // Guarda datos en formato array
                 for (let i in data) {
@@ -479,14 +410,16 @@ const DB = {
         for (let i = data.length - 1; i >= 0; i--) {
             const d = data[i];
             if (d) {
-                if (d.id == id) 
+                if (d.id == id)
                     return last;
-                
+
+
 
                 last = d;
-            } else 
+            } else
                 return false;
-            
+
+
 
         }
         return false;
@@ -497,9 +430,10 @@ const DB = {
 
         for (const i in data) {
             const d = data[i];
-            if (d.id == id) 
+            if (d.id == id)
                 return last;
-            
+
+
 
             last = d;
         }
@@ -525,9 +459,10 @@ const DB = {
                         this.set(controller, c, 'id', c.id);
                     }
                     resolve(d);
-                } else 
+                } else
                     reject(d);
-                
+
+
 
             })
         })
@@ -546,7 +481,7 @@ const date = {
     },
     actual() {
         let f = new Date();
-        return(f.getDate() + "/" + (
+        return (f.getDate() + "/" + (
             f.getMonth() + 1
         ) + "/" + f.getFullYear());
     },
@@ -618,9 +553,10 @@ const date = {
                 h = date.getHours().toString().padStart(2, '0');
                 n = date.getMinutes().toString().padStart(2, '0');
                 s = date.getSeconds().toString().padStart(2, '0');
-            } else 
+            } else
                 return false;
-            
+
+
 
             switch (format) {
                 case 'sql':
@@ -685,7 +621,7 @@ const date = {
             d2 = new Date(this.format(f2, 'sql')).getTime(),
             diff = d2 - d1;
 
-        return(diff / (1000 * 60 * 60 * 24));
+        return (diff / (1000 * 60 * 60 * 24));
     },
     add(argdate, value = 1, unity = 'days', format = null) {
 
@@ -699,11 +635,12 @@ const date = {
                 break;
             case 'year': date.setFullYear(date.getFullYear() + v);
         }
-        if (format) 
+        if (format)
             return this.format(date, format);
-         else 
+        else
             return date;
-        
+
+
 
     },
     sql(param = this.date) {
@@ -721,18 +658,21 @@ const date = {
 }
 // Funciones para desarrollo
 var echo = function () {
-    for (let i in arguments) 
+    for (let i in arguments)
         console.log(arguments[i]);
+
 };
 var exist = function (arg = undefined) {
     return arg != undefined && arg != null
 }
-var remove = function (arr =[]) {
+var remove = function (arr = []) {
     do {
         let b = arr[0]
-        if (b) 
+        if (b)
             b.remove()
-        
+
+
+
     } while (arr.length > 0)
 }
 var isset = function (arg = undefined) {
@@ -744,4 +684,6 @@ var isEmpty = function (arg = undefined) {
 var isTrue = function (arg = null) {
     return arg === true
 }
-
+window.onload = function funLoad() {
+    app.load();
+}

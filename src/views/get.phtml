@@ -2,23 +2,11 @@
     <h2>Peticiones GET</h2>
     <p>Carga de páginas modulares</p>
     <p>La navegación se realiza mediante peticiones parciales de las subpaginas, en Skeleton son secciones,  evitando la necesidad de recargar la totalidad de las paginas web y todos los arhivos necesarios para su correcto funcionamiento.</p>
-    <div class="row distributed">
-        <div class="">
-            <m-input id="mycomponent" label="Introduce un valor"></m-input>
-            <m-btn-success onclick="getmepage()">Enviar datos a una subpagina</m-btn-success>
-        </div>
-        <div class="">
-            <div id="container_component_input">
-                <section>Contenedor de la respuesta GET</section>
-            </div>
-        </div>
+    <div class="">
+        <form id="form" action="action" method="post">
+            <input type="text" name="input" id="input">
+            <input type="submit" value="Aceptar">
+        </form>
+        <div id="buzon"></div>
     </div>
-    <script>
-        let getmepage = function() {
-            let value = $('#mycomponent_input').val()
-            app.getView('get_respond.phtml', {
-                'val': value
-            }, true, '#container_component_input')
-        }
-    </script>
 </section>

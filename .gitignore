@@ -1,10 +1,17 @@
 # Variables de entorno
 .env
 
+# NPM
+node_modules/
+package-lock.json
+
 # Carpeta autogenerada
-/htdocs/www/
+htdocs/www/
 
 # Composer
 composer.lock
 composer.phar
-/vendor/
+vendor/
+
+# caches
+.phpunit.cache

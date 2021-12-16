@@ -64,15 +64,18 @@ class Router
         }
         exit($this->loadController($this->controller)); */
     }
-    private function isPost($params)
+    /**
+     * Petición al servidor mediante el método post 
+     * Se utiliza para la creación de nuevos registros o editarlos si estos ya existen 
+     * @param string $params JSON 
+     *  { 
+     *      controller : controlador al que se dirige
+     *      data : objeto js con los datos a tratar
+     *  }
+     */
+    private function isPost(string $params) : void
     {
         try {
-
-            // Método post recibe siempre 3 parametros 
-            // controller => Controlador
-            // action => Acción a realizar
-            // data => Objeto con los datos a procesar (¡siempre tendrán que estar encapsulados en un objeto JS!)
-
             // Pasamos los datos de json a objeto Data
             $this->data->addItems($params['data'] ?? null);
 
@@ -88,7 +91,7 @@ class Router
 
             // SALIDA 
 
-            exit(json_encode($respond, true));
+           exit(json_encode($respond, true)); 
         } catch (\Exception $e) {
             exit(json_encode(['success' => 'false', 'mens' => 'error: ' . $e->menssage], true));
         }
