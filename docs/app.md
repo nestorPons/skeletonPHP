@@ -16,3 +16,7 @@ app.getView('page.phtml', data,  'body', true);
 ```
 Con este comando estamos realizando una petición a la pagina 'page.phtml', mandandole unos valores que podremos interpretar mediante el sublenguje php Bone como variables $$nombre_de_la_variable. 
 Le estamos diciendo que lo cargue en el body de la pagina principal y que oculte el contenido (IMPORTANTE! Oculta y no destruye, aumentando la velocidad de recuperación de la pagina).
+
+# Peticiones POST
+
+## Descripción

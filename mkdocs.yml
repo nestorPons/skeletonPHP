@@ -7,6 +7,7 @@ nav:
   - Carpetas: 'folders.md'
   - Componentes: 'components.md'
   - Bone: 'bone.md' 
+  - App: 'app.md'
 theme:
     name: readthedocs
     logo:

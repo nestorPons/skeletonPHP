@@ -1,4 +1,4 @@
-# Docuementación Skeleton
+# Repositorio de la documentación de Skeleton
 
 Documentación generada en marckdown y con mkdocs. 
 
@@ -34,7 +34,7 @@ mkdocs serve
 
 Acceda al servidor: 
 ```
-127.0.0.1:8000
+localhost:8000
 ```
 
 
