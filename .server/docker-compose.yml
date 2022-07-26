@@ -1,5 +1,21 @@
 version: "3.1"
 services:
+    db:
+        image: mysql
+        ports: 
+            - "3306:3306"
+        command: --default-authentication-plugin=mysql_native_password
+        environment:
+            MYSQL_DATABASE: mydb
+            MYSQL_USER: user
+            MYSQL_PASSWORD: test
+            MYSQL_ROOT_PASSWORD: test 
+        volumes:
+            - ./dump:/docker-entrypoint-initdb.d
+            - ./conf:/etc/mysql/conf.d
+            - persistent:/var/lib/mysql
+        networks:
+            - default
     www:
         build: .
         ports: 
@@ -15,20 +31,6 @@ services:
             - db
         networks:
             - default
-    db:
-        image: mysql:8.0
-        ports: 
-            - "3306:3306"
-        command: --default-authentication-plugin=mysql_native_password
-        environment:
-            MYSQL_DATABASE: mydb
-            MYSQL_USER: user
-            MYSQL_PASSWORD: test
-            MYSQL_ROOT_PASSWORD: test 
-        volumes:
-            - persistent:/var/lib/mysql
-        networks:
-            - default
     phpmyadmin:
         image: phpmyadmin/phpmyadmin
         links: 
@@ -36,7 +38,7 @@ services:
         ports:
             - 8080:80
         environment:
-            MYSQL_USER: user
+            MYSQL_USER: root
             MYSQL_PASSWORD: test
             MYSQL_ROOT_PASSWORD: test
             UPLOAD_LIMIT: 300M

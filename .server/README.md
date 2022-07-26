@@ -1,32 +1,24 @@
+Watch the video 👇
+
+[![Watch the video](https://img.youtube.com/vi/v-r_12oezds/maxresdefault.jpg)](https://youtu.be/v-r_12oezds)
+
 # docker-lamp
 
-Ejemplo de Docker con Apache, MySql 8.0, PhpMyAdmin y PHP.  
-Puede usar MySql 5.7 si utiliza la etiqueta 'mysql5.7'.  
-Se utiliza docker-compose como herramienta para facilitar el uso de Docker.  
+Docker with Apache, MySQL 8.0, PHPMyAdmin and PHP.
 
-Acceda a esta carpeta:  
-```cd su_proyecto\.server```  
+I use docker-compose as an orchestrator. To run these containers:
 
-Asegurese de que el demonio Docker esta activado:  
-Arch-linux  
-```systemctl status docker```  
+```
+docker-compose up -d
+```
 
-Si fuera necesario activelo:   
-```systemctl start docker```  
+Open phpmyadmin at [http://127.0.0.1:8000](http://127.0.0.1:8000)
+Open web browser to look at a simple php example at [http://127.0.0.1:80](http://127.0.0.1:80)
 
-Para ejecutar los contenedores:  
-``` sudo docker-compose up -d ```    
+Clone YourProject on `YOU-PROJECT/htdocs/` and then, open web [http://127.0.0.1](http://127.0.0.1)
 
-Abrimos phpmyadmin en [http://localhost:8080](http://localhost:8080)  
-La pagina web la encontramos en [http://localhost](http://localhost)  
+Run MySQL client:
 
-Ejecute el cliente mysql:  
-``` sudo docker-compose exec db mysql -u root -p ```  
+- `docker-compose exec db mysql -u root -p` 
 
-
-usuario: root  
-contraseña: test   
- 
-Puede encontrar en .htaccess.local la configuración para el servidor Apache.   
-
-¡A Disfrutar!
+Infrastructure as code!
