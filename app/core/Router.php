@@ -36,7 +36,7 @@ class Router
 
         // Valores por defecto
         $this->db = \CONFIG['db'];
-        $this->controller =  ucfirst($params['controller'] ?? null);
+        $this->controller =  ucfirst($params['controller'] ?? '');
 
         if (strtoupper($_SERVER['REQUEST_METHOD']) === 'POST') $this->isPost($params);
         elseif (strtoupper($_SERVER['REQUEST_METHOD']) === 'GET')  $this->isGet();

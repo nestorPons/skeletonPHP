@@ -10,8 +10,8 @@ cd skeletonPHP
 ```
 
 ## Instalación de dependencias php
-Debe de instalar las dependencias con composer de PHP:  
-```composer install```  
+Debe de instalar las dependencias con composer de PHP:
+```composer install```   
 
 ## Inicio servidor de desarroyo
 El proyecto dispone de un servidor LAMP Docker para pruebas de desarroyo:    
@@ -23,4 +23,20 @@ Consulte nuestro manual de usuario:
 
 ## Configuración 
 Puede configurar la aplicación en:  
-```config/config.ini```
+```config/config.ini``` 
+
+## Edita el archivo README.md 
+
+## Cambiar el origin
+### Eliminar viejo origen
+```git remote rm origin```
+### Agregar nuevo origen
+```git remote add origin git@github.com:tu/proyecto.git```
+### Configurarle como master
+```git config master.remote origin```
+### Configura el rastreo de la rama principal 
+```git branch --set-upstream-to=origin/main main```
+### Vincula los repositorios 
+```git pull --allow-unrelated-histories```
+### Sube los archivos Skeleton en el nuevo repositorio
+```git push --set-upstream origin main```

@@ -502,7 +502,8 @@ class Prepocessor
     private function deleteDirectory(string $dir): self
     {
         if (!$dh = @opendir($dir)) {
-            mkdir($dir, 0777); // Si no la encuentra lo crea
+            var_dump($dir);
+            mkdir($dir, 0777, true); // Si no la encuentra lo crea
         } else {
             while (false !== ($current = readdir($dh))) {
                 if ($current != '.' && $current != '..') {
