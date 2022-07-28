@@ -48,6 +48,7 @@ if( CONFIG['develop'] ){
     header('Cache-Control: post-check=0, pre-check=0', FALSE);
     header('Pragma: no-cache');
     require_once \FOLDER\HELPERS  . 'dev.php';
+    require_once \FOLDER\LIBS  . 'lessc.inc.php';
     
     new Prepocessor(false);
 }
